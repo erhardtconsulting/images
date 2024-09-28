@@ -1,0 +1,55 @@
+name: "FreshRSS: Build & Publish Docker Image"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'freshrss/**'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: "freshrss"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU for multi-architecture build
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract FRESHRSS_VERSION from Dockerfile
+        id: vars
+        run: |
+          FRESHRSS_VERSION=$(grep -E '^ARG FRESHRSS_VERSION=' Dockerfile | cut -d '=' -f 2)
+          echo "FRESHRSS_VERSION=$FRESHRSS_VERSION" >> $GITHUB_ENV
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: freshrss
+          platforms: "linux/amd64,linux/arm64,linux/arm/v7"
+          push: true
+          tags: |
+            ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.FRESHRSS_VERSION }}
+            ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest

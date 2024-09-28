@@ -1,0 +1,3 @@
+# minute | hour | day of | month | day of | commands
+#        |      | month  |       | week   |
+*/15       *      *        *       *        /usr/local/bin/frankenphp php-cli /opt/freshrss/app/actualize_script.php

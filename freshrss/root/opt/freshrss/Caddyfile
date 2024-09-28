@@ -1,0 +1,53 @@
+{
+    # Disable HTTPS and enable logs
+    auto_https off
+    log {
+        output stdout
+        level INFO
+    }
+    frankenphp
+}
+
+http://localhost:8080 {
+    root * /opt/freshrss/p
+
+    # Deflate compression
+    encode zstd br gzip
+
+    # Disable ETag (equivalent to FileETag None)
+    header {
+        ETag off
+    }
+
+    # Cache control and expiration headers
+    header {
+        Cache-Control "public, max-age=2592000"
+    }
+
+    @no_cache_php {
+        path *.php
+    }
+    header @no_cache_php {
+        Cache-Control "no-store"
+    }
+
+    # Manage headers for static files
+    @static_files {
+        path_regexp \.(css|gif|html|ico|js|png|svg|woff|woff2)$
+    }
+    header @static_files {
+        Cache-Control "public"
+    }
+
+    # Modify Set-Cookie header for SameSite=Lax
+    header {
+        Set-Cookie .* "SameSite=Lax"
+    }
+
+    # Provide the true IP address
+    header {
+        X-Real-IP {remote_host}
+    }
+
+    php_server
+}
