@@ -5,16 +5,19 @@ ARG DEBIAN_VERSION="bookworm"
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-${DEBIAN_VERSION}
 
-ARG USER="freshrss"
-ARG SUPERCRONIC_VERSION="v0.2.32"
-ARG FRESHRSS_VERSION="1.21.0"
-ARG S6_OVERLAY_VERSION="v3.1.1.2"
-
 # Get target arch
 ARG TARGETARCH
 ARG TARGETOS
 
-# Set container root to read-only
+# Set user
+ARG USER="freshrss"
+
+# Set versions
+ARG SUPERCRONIC_VERSION="v0.2.32"
+ARG S6_OVERLAY_VERSION="v3.1.1.2"
+ARG FRESHRSS_VERSION="1.21.0"
+
+# Set container root to read-only and production
 ENV S6_READ_ONLY_ROOT="1"
 ENV FRESHRSS_ENV="production"
 
