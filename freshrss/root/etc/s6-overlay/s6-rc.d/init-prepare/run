@@ -1,3 +1,0 @@
-#!/command/with-contenv bash
-
-/usr/local/bin/frankenphp php-cli /opt/freshrss/cli/prepare.php > /dev/null

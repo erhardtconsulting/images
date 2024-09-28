@@ -16,7 +16,6 @@ ARG GID=2000
 
 # Set versions
 ARG SUPERCRONIC_VERSION="0.2.32"
-ARG S6_OVERLAY_VERSION="3.2.0.0"
 ARG FRESHRSS_VERSION="1.24.3"
 
 # Set container root to read-only and production
@@ -30,33 +29,27 @@ LABEL org.opencontainers.image.licenses="MIT"
 # Copy root
 COPY root/ /
 
-RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" && exit 1; fi; \
+RUN apt-get update  \
+      && apt-get -y install \
+        supervisor \
+        tini \
+      && rm -rf /var/lib/apt/lists/*; \
+    # Install supercronic
     curl -fLo "/usr/local/bin/supercronic" "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH}" \
-    && chmod +x "/usr/local/bin/supercronic"; \
-    # Install s6-overlay according to cpu architecture
-    case ${TARGETARCH} in \
-        "386") ARCH=i686 ;; \
-        "amd64") ARCH=x86_64 ;; \
-        "arm64") ARCH=aarch64 ;; \
-        "arm") ARCH=armhf ;; \
-        *) echo "unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
-    esac && \
-    curl -fL https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz | tar -C / -Jxpf - && \
-    curl -fL https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${ARCH}.tar.xz | tar -C / -Jxpf -; \
+      && chmod +x "/usr/local/bin/supercronic"; \
     # Install php extensions
     install-php-extensions \
       gmp \
       intl \
       pdo_mysql \
       pdo_pgsql \
-      pdo_sqlite \
       zip; \
 	# Check if the group exists; if not, create it
     if ! getent group ${GID} >/dev/null; then \
-        groupadd -g ${GID} ${USER}; \
+      groupadd -g ${GID} ${USER}; \
     else \
-        # If GID exists, get the group name
-        EXISTING_GROUP=$(getent group ${GID} | cut -d: -f1); \
+      # If GID exists, get the group name
+      EXISTING_GROUP=$(getent group ${GID} | cut -d: -f1); \
     fi && \
     # Create the user with the specified UID and GID
     useradd -m -d /opt/freshrss -s /bin/bash -u ${UID} -g ${GID} ${USER}; \
@@ -79,8 +72,7 @@ RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" &
     # Disable updating
     sed -r -i "\\#disable_update#s#^.*#\t'disable_update' => true,#" /opt/freshrss/config.default.php; \
     # Fix permissions
-    chown -R freshrss:freshrss /opt/freshrss; \
-    chown -R freshrss:freshrss /run;
+    chown -R freshrss:freshrss /opt/freshrss;
 
 # Set up user
 USER ${USER}
@@ -93,5 +85,8 @@ EXPOSE 8080
 
 VOLUME [ "/tmp" ]
 
-# Run s6
-ENTRYPOINT ["/init"]
+# Set tini as entrypoing
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+# Run everthing
+CMD ["/docker-run.sh"]

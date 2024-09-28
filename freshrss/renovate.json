@@ -24,16 +24,6 @@
     {
       "fileMatch": ["freshrss/Dockerfile"],
       "matchStrings": [
-        "ARG S6_OVERLAY_VERSION=\"(?<currentValue>[^\"]+)\""
-      ],
-      "depNameTemplate": "just-containers/s6-overlay",
-      "datasourceTemplate": "github-releases",
-      "versioningTemplate": "loose",
-      "extractVersionTemplate": "^(?<version>.*)$"
-    },
-    {
-      "fileMatch": ["freshrss/Dockerfile"],
-      "matchStrings": [
         "ARG FRESHRSS_VERSION=\"(?<currentValue>[^\"]+)\""
       ],
       "depNameTemplate": "FreshRSS/FreshRSS",

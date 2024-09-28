@@ -1,3 +1,0 @@
-#!/command/with-contenv bash
-
-/usr/local/bin/frankenphp run --config /opt/freshrss/Caddyfile
