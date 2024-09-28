@@ -25,7 +25,7 @@ ENV FRESHRSS_ENV="production"
 COPY root/ /
 
 RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" && exit 1; fi; \
-    curl -Lo "/usr/local/bin/supercronic" "https://github.com/aptible/supercronic/releases/download/${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH}" \
+    curl -fLo "/usr/local/bin/supercronic" "https://github.com/aptible/supercronic/releases/download/${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH}" \
     && chmod +x "/usr/local/bin/supercronic"; \
     # Install s6-overlay according to cpu architecture
     case ${TARGETARCH} in \
@@ -35,8 +35,8 @@ RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" &
         "arm") ARCH=armhf ;; \
         *) echo "unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
     esac && \
-    curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz | tar -C / -Jxpf - && \
-    curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-${ARCH}.tar.xz | tar -C / -Jxpf -; \
+    curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz | tar -C / -Jxpf - && \
+    curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-${ARCH}.tar.xz | tar -C / -Jxpf -; \
     # Install php extensions
     install-php-extensions \
       curl \
@@ -56,7 +56,7 @@ RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" &
 	# Give write access to /data/caddy and /config/caddy
 	chown -R ${USER}:${USER} /data/caddy && chown -R ${USER}:${USER} /config/caddy; \
     # Download and install FreshRSS
-    curl -sL https://github.com/FreshRSS/FreshRSS/archive/${FRESHRSS_VERSION}.tar.gz | tar xz --strip-components=1 -C /opt/freshrss; \
+    curl -sfL https://github.com/FreshRSS/FreshRSS/archive/${FRESHRSS_VERSION}.tar.gz | tar xz --strip-components=1 -C /opt/freshrss; \
     # Delete unnecessary folders \
     rm -rf \
       /opt/freshrss/.devcontainer \
