@@ -1,0 +1,8 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "github>chrootlogin/homelab//config/renovate/default-rules.json",
+    "github>erhardtconsulting/images//freshrss/renovate.json"
+  ]
+}

@@ -1,10 +1,9 @@
 # syntax=docker/dockerfile:1
 
 ARG FRANKENPHP_VERSION="1.2.5"
-ARG PHP_VERSION="8.3.11"
 ARG DEBIAN_VERSION="bookworm"
 
-FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-${DEBIAN_VERSION}
+FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-${DEBIAN_VERSION}
 
 ARG USER="freshrss"
 ARG SUPERCRONIC_VERSION="v0.2.32"

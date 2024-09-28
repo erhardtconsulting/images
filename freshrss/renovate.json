@@ -1,0 +1,57 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "regexManagers": [
+    {
+      "fileMatch": ["freshrss/Dockerfile"],
+      "matchStrings": [
+        "ARG S6_OVERLAY_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "just-containers/s6-overlay",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    },
+    {
+      "fileMatch": ["freshrss/Dockerfile"],
+      "matchStrings": [
+        "ARG FRESHRSS_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "FreshRSS/FreshRSS",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    },
+    {
+      "fileMatch": ["freshrss/Dockerfile"],
+      "matchStrings": [
+        "ARG SUPERCRONIC_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "aptible/supercronic",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    },
+    {
+      "fileMatch": ["freshrss/Dockerfile"],
+      "matchStrings": [
+        "ARG FRANKENPHP_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "dunglas/frankenphp",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["github-releases"],
+      "matchPackagePrefixes": ["just-containers", "FreshRSS", "aptible"],
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["dunglas/frankenphp"],
+      "extractVersionTemplate": "^(?<version>[0-9.]+)"
+    }
+  ]
+}
