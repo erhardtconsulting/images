@@ -27,9 +27,10 @@ RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" &
     && chmod +x "/usr/local/bin/supercronic"; \
     # Install s6-overlay according to cpu architecture
     case ${TARGETARCH} in \
+        "386") ARCH=i686 ;; \
         "amd64") ARCH=x86_64 ;; \
         "arm64") ARCH=aarch64 ;; \
-        "arm") ARCH=arm ;; \
+        "arm") ARCH=armhf ;; \
         *) echo "unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
     esac && \
     curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz | tar -C / -Jxpf - && \
