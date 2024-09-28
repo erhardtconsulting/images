@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG FRANKENPHP_VERSION="1.2.5"
+ARG FRANKENPHP_VERSION="1.2.4"
 ARG DEBIAN_VERSION="bookworm"
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-${DEBIAN_VERSION}
@@ -13,8 +13,8 @@ ARG TARGETOS
 ARG USER="freshrss"
 
 # Set versions
-ARG SUPERCRONIC_VERSION="v0.2.32"
-ARG S6_OVERLAY_VERSION="v3.1.1.2"
+ARG SUPERCRONIC_VERSION="0.2.31"
+ARG S6_OVERLAY_VERSION="3.1.1.2"
 ARG FRESHRSS_VERSION="1.21.0"
 
 # Set container root to read-only and production
@@ -25,7 +25,7 @@ ENV FRESHRSS_ENV="production"
 COPY root/ /
 
 RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" && exit 1; fi; \
-    curl -fLo "/usr/local/bin/supercronic" "https://github.com/aptible/supercronic/releases/download/${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH}" \
+    curl -fLo "/usr/local/bin/supercronic" "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH}" \
     && chmod +x "/usr/local/bin/supercronic"; \
     # Install s6-overlay according to cpu architecture
     case ${TARGETARCH} in \
@@ -35,8 +35,8 @@ RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" &
         "arm") ARCH=armhf ;; \
         *) echo "unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
     esac && \
-    curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz | tar -C / -Jxpf - && \
-    curl -fL https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-${ARCH}.tar.xz | tar -C / -Jxpf -; \
+    curl -fL https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz | tar -C / -Jxpf - && \
+    curl -fL https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${ARCH}.tar.xz | tar -C / -Jxpf -; \
     # Install php extensions
     install-php-extensions \
       curl \
