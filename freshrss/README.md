@@ -1,16 +1,24 @@
-![FreshRSS logo](https://raw.githubusercontent.com/FreshRSS/FreshRSS/refs/heads/edge/docs/img/FreshRSS-logo.png)
+![FreshRSS Logo](https://raw.githubusercontent.com/FreshRSS/FreshRSS/refs/heads/edge/docs/img/FreshRSS-logo.png)
 
 # FreshRSS Rootless Docker Image
 
-* Official website: [FreshRSS.org](https://freshrss.org)
-* Project License: [GNU AGPL 3](https://www.gnu.org/licenses/agpl-3.0.html)
+- **Official Website**: [FreshRSS.org](https://freshrss.org)
+- **Project License**: [GNU AGPL 3](https://www.gnu.org/licenses/agpl-3.0.html)
 
-This repository contains a rootless Docker image for the FreshRSS application, designed to run in a Kubernetes cluster. This image includes both FreshRSS and FrankenPHP, and is optimized for secure, rootless operation.
+## Overview
+
+This repository provides a rootless Docker image for [FreshRSS](https://freshrss.org), a self-hosted RSS feed aggregator that allows you to collect and read news and articles from various sources in one place. FreshRSS is lightweight, customizable, and supports multiple users.
+
+Our rootless Docker image is specifically designed to run securely in Kubernetes clusters without granting root privileges. It includes both FreshRSS and [FrankenPHP](https://frankenphp.dev/), optimized for secure, rootless operation.
+
+## Why Use a Rootless Image?
+
+Security is a critical concern in containerized environments. Running containers with root privileges can pose significant security risks, such as privilege escalation and unauthorized access. By utilizing a rootless Docker image, you enhance the security of your Kubernetes cluster by ensuring that the application operates with the least privileges necessary. This image differs from the original project image by enabling rootless execution, making it more suitable for environments where security is a priority.
 
 ## Features
 
-- **Rootless Operation**: Enhanced security by running without root privileges.
-- **Kubernetes Ready**: Easily deployable in a Kubernetes cluster.
+- **Rootless Operation**: Enhances security by running without root privileges.
+- **Kubernetes Ready**: Easily deployable in Kubernetes clusters.
 - **Volume Support**: Supports writable volumes for data and extensions.
 - **Configurable Timezone**: Set your local timezone using the `TZ` environment variable.
 
@@ -18,34 +26,36 @@ This repository contains a rootless Docker image for the FreshRSS application, d
 
 ### Prerequisites
 
-- Docker
-- Docker Compose (optional, for local deployment)
-- Kubernetes (for cluster deployment)
+- **Docker**: For container management.
+- **Docker Compose** (optional): For local deployment.
+- **Kubernetes**: For cluster deployment.
 
 ### Volume Mounts
 
 - **Data Volume**: Mount a writable volume to `/opt/freshrss/data`.
-- **Extensions Volume** *(optional)*: Mount a writable volume to `/opt/freshrss/extensions` (optional).
+- **Extensions Volume** *(optional)*: Mount a writable volume to `/opt/freshrss/extensions`.
 
 ### Environment Variables
 
-- **TZ**: Set this to your local timezone (e.g., `Europe/Zurich`).
+- **TZ**: Set your local timezone (e.g., `Europe/Zurich`).
 
 ### Unsupported Environment Variables
 
-The following environment variables from the original Docker file are not supported:
+The following environment variables from the original Docker image are not supported in this rootless version:
+
 - `FRESHRSS_INSTALL`
 - `FRESHRSS_USER`
 
-Use the installation assistant for setup instead.
+Please use the installation assistant provided by FreshRSS for setup.
 
 ### Configuration
 
-You can overwrite the configuration using config maps by mounting them to:
+You can override the configuration using config maps by mounting them to:
+
 - `/opt/freshrss/data/config.custom.php`
 - `/opt/freshrss/data/config-user.custom.php`
 
-## Example Usage
+## Usage Examples
 
 ### Docker Compose
 
@@ -56,25 +66,26 @@ version: '3.7'
 
 services:
   freshrss:
-    image: your-docker-image
+    image: ghcr.io/erhardtconsulting/freshrss
     container_name: freshrss
     environment:
       - TZ=Europe/Zurich
     volumes:
       - ./data:/opt/freshrss/data
-      - ./extensions:/opt/freshrss/extensions
     ports:
-      - "8080:80"
+      - "8080:8080"
 ```
 
-Run the following command to start the container:
+Start the container:
+
 ```bash
 docker-compose up -d
 ```
 
 ### Kubernetes Deployment
 
-Create a freshrss-deployment.yaml file with the following content:
+Create a `freshrss-deployment.yaml` file with the following content:
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -92,38 +103,36 @@ spec:
     spec:
       containers:
         - name: freshrss
-          image: your-docker-image
+          image: ghcr.io/erhardtconsulting/freshrss
           env:
             - name: TZ
               value: "Europe/Zurich"
           volumeMounts:
             - name: data
               mountPath: /opt/freshrss/data
-            - name: extensions
-              mountPath: /opt/freshrss/extensions
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: freshrss-data
-        - name: extensions
-          persistentVolumeClaim:
-            claimName: freshrss-extensions
 ```
 
-Apply the deployment with the following command:
+Apply the deployment:
+
 ```bash
 kubectl apply -f freshrss-deployment.yaml
 ```
 
 ## Additional Resources
 
-* **Code Repository**: [FreshRSS GitHub](https://github.com/FreshRSS/FreshRSS)
-* **Documentation**: [FreshRSS Documentation](https://freshrss.github.io/FreshRSS/)
+- **FreshRSS Code Repository**: [GitHub](https://github.com/FreshRSS/FreshRSS)
+- **FreshRSS Documentation**: [Official Docs](https://freshrss.github.io/FreshRSS/)
 
 ## Issues and Contributions
 
-For issues and bugs related to the container itself, please open an issue in this repository. For all other issues, including those related to the FreshRSS application, please refer to the [original FreshRSS repository](https://github.com/FreshRSS/FreshRSS).
+For issues related to the container itself, please open an issue in this repository. For issues concerning the FreshRSS application, refer to the [original FreshRSS repository](https://github.com/FreshRSS/FreshRSS).
 
 ## Disclaimer
 
-Erhardt Consulting GmbH is not connected in any way to this project. This image solely exists to enable the deployment of this software to Kubernetes clusters without root rights. This image is provided "as is" without any warranty.Erhardt Consulting GmbH is not connected in any way to this project. This image solely exists to enable the deployment of this software to Kubernetes clusters without root rights. This image is provided "as is" without any warranty.
+Erhardt Consulting GmbH is not affiliated with the FreshRSS project or its contributors. This rootless Docker image is provided "as is" to facilitate the deployment of FreshRSS in Kubernetes clusters without root privileges. All images are provided without warranty of any kind.
+
+Please report any issues unrelated to containerization directly to the FreshRSS project. The code for the container configuration is provided under the terms of the [MIT License](LICENSE). Note that this license does not apply to the application code within the containers, which may be distributed under different, possibly more restrictive licenses. Users are responsible for complying with the licenses of the underlying applications.
