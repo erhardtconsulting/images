@@ -9,7 +9,7 @@
       "depNameTemplate": "dunglas/frankenphp",
       "datasourceTemplate": "docker",
       "versioningTemplate": "semver",
-      "extractVersionTemplate": "^v?(?<version>.*)$"
+      "extractVersionTemplate": "^(?<version>[0-9.]+)-bookworm$"
     },
     {
       "fileMatch": ["freshrss/Dockerfile"],
@@ -18,7 +18,7 @@
       ],
       "depNameTemplate": "aptible/supercronic",
       "datasourceTemplate": "github-releases",
-      "versioningTemplate": "semver",
+      "versioningTemplate": "loose",
       "extractVersionTemplate": "^v?(?<version>.*)$"
     },
     {
@@ -28,7 +28,7 @@
       ],
       "depNameTemplate": "just-containers/s6-overlay",
       "datasourceTemplate": "github-releases",
-      "versioningTemplate": "semver",
+      "versioningTemplate": "loose",
       "extractVersionTemplate": "^v?(?<version>.*)$"
     },
     {
@@ -39,23 +39,6 @@
       "depNameTemplate": "FreshRSS/FreshRSS",
       "datasourceTemplate": "github-tags",
       "versioningTemplate": "semver",
-      "extractVersionTemplate": "^(?<version>.*)$"
-    }
-  ],
-  "packageRules": [
-    {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["dunglas/frankenphp"],
-      "extractVersionTemplate": "^(?<version>[0-9.]+)-bookworm$"
-    },
-    {
-      "matchDatasources": ["github-releases"],
-      "matchPackageNames": ["just-containers/s6-overlay", "aptible/supercronic"],
-      "extractVersionTemplate": "^v?(?<version>.*)$"
-    },
-    {
-      "matchDatasources": ["github-tags"],
-      "matchPackageNames": ["FreshRSS/FreshRSS"],
       "extractVersionTemplate": "^(?<version>.*)$"
     }
   ]
