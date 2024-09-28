@@ -30,6 +30,10 @@ Security is a critical concern in containerized environments. Running containers
 - **Docker Compose** (optional): For local deployment.
 - **Kubernetes**: For cluster deployment.
 
+### Container User
+
+This container uses the user "freshrss" with UID 2000 and GID 2000 for running all his processes.
+
 ### Volume Mounts
 
 - **Data Volume**: Mount a writable volume to `/opt/freshrss/data`.

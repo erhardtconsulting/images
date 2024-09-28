@@ -11,6 +11,8 @@ ARG TARGETOS
 
 # Set user
 ARG USER="freshrss"
+ARG UID=2000
+ARG GID=2000
 
 # Set versions
 ARG SUPERCRONIC_VERSION="0.2.32"
@@ -48,8 +50,15 @@ RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" &
       sqlite3 \
       xml \
       zip; \
-	# Add user freshrss
-	useradd -m -d /opt/freshrss -s /bin/bash ${USER}; \
+	# Check if the group exists; if not, create it
+    if ! getent group ${GID} >/dev/null; then \
+        groupadd -g ${GID} ${USER}; \
+    else \
+        # If GID exists, get the group name
+        EXISTING_GROUP=$(getent group ${GID} | cut -d: -f1); \
+    fi && \
+    # Create the user with the specified UID and GID
+    useradd -m -d /opt/freshrss -s /bin/bash -u ${UID} -g ${GID} ${USER}; \
 	# Remove default capability \
     setcap -r /usr/sbin/cron; \
 	setcap -r /usr/local/bin/frankenphp; \
