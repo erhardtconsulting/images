@@ -4,5 +4,14 @@
     "config:recommended",
     "github>chrootlogin/homelab//config/renovate/default-rules.json",
     "github>erhardtconsulting/images//freshrss/renovate.json"
+  ],
+  "dependencyDashboard": false,
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "pinDigests": false
+    }
   ]
 }
