@@ -51,7 +51,7 @@
     {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["dunglas/frankenphp"],
-      "extractVersionTemplate": "^(?<version>[0-9.]+)"
+      "extractVersionTemplate": "^(?<version>[0-9.]+)-bookworm$"
     }
   ]
 }
