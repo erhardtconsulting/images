@@ -23,6 +23,10 @@ ARG FRESHRSS_VERSION="1.24.3"
 ENV S6_READ_ONLY_ROOT="1"
 ENV FRESHRSS_ENV="production"
 
+LABEL org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
+LABEL org.opencontainers.image.description="Rootless FreshRSS Image"
+LABEL org.opencontainers.image.licenses="MIT"
+
 # Copy root
 COPY root/ /
 
