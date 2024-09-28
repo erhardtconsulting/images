@@ -41,14 +41,14 @@ jobs:
       - name: Extract FRESHRSS_VERSION from Dockerfile
         id: vars
         run: |
-          FRESHRSS_VERSION=$(grep -E '^ARG FRESHRSS_VERSION=' Dockerfile | cut -d '=' -f 2)
+          FRESHRSS_VERSION=$(grep -E '^ARG FRESHRSS_VERSION=' freshrss/Dockerfile | cut -d '=' -f 2)
           echo "FRESHRSS_VERSION=$FRESHRSS_VERSION" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: freshrss
-          platforms: "linux/amd64,linux/arm64,linux/arm/v7"
+          platforms: "linux/386,linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7"
           push: true
           tags: |
             ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.FRESHRSS_VERSION }}
