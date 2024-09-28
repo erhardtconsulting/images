@@ -76,8 +76,6 @@ RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" &
     mkdir /opt/freshrss/data; \
     # Enable production configuration for PHP
     cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini; \
-    # Enable Zip Extension
-    echo "extension=zip" >> ${PHP_INI_DIR}/php.ini; \
     # Disable updating
     sed -r -i "\\#disable_update#s#^.*#\t'disable_update' => true,#" /opt/freshrss/config.default.php; \
     # Fix permissions
@@ -91,6 +89,8 @@ WORKDIR /opt/freshrss
 
 # Expose port for FrankenPHP
 EXPOSE 8080
+
+VOLUME [ "/run", "/tmp" ]
 
 # Run s6
 ENTRYPOINT ["/init"]

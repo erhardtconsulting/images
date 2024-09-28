@@ -61,31 +61,6 @@ You can override the configuration using config maps by mounting them to:
 
 ## Usage Examples
 
-### Docker Compose
-
-Create a `docker-compose.yml` file with the following content:
-
-```yaml
-version: '3.7'
-
-services:
-  freshrss:
-    image: ghcr.io/erhardtconsulting/freshrss
-    container_name: freshrss
-    environment:
-      - TZ=Europe/Zurich
-    volumes:
-      - ./data:/opt/freshrss/data
-    ports:
-      - "8080:8080"
-```
-
-Start the container:
-
-```bash
-docker-compose up -d
-```
-
 ### Kubernetes Deployment
 
 Create a `freshrss-deployment.yaml` file with the following content:
@@ -105,6 +80,10 @@ spec:
       labels:
         app: freshrss
     spec:
+      securityContext:
+        runAsUser: 2000
+        runAsGroup: 2000
+        fsGroup: 2000
       containers:
         - name: freshrss
           image: ghcr.io/erhardtconsulting/freshrss
@@ -114,16 +93,36 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /opt/freshrss/data
+            - name: tmp-tmpfs
+              mountPath: /tmp
+            - name: run-tmpfs
+              mountPath: /run
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: freshrss-data
+        - name: tmp-tmpfs
+          emptyDir:
+            medium: Memory
+        - name: run-tmpfs
+          emptyDir:
+            medium: Memory
 ```
 
 Apply the deployment:
 
 ```bash
 kubectl apply -f freshrss-deployment.yaml
+```
+
+### Docker Compose
+
+See [docker-compose.yaml](docker-compose.yaml).
+
+Start the container:
+
+```bash
+docker-compose up -d
 ```
 
 ## Additional Resources
