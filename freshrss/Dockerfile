@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG FRANKENPHP_VERSION="1.2.4"
+ARG FRANKENPHP_VERSION="1.2.5"
 ARG DEBIAN_VERSION="bookworm"
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-${DEBIAN_VERSION}
