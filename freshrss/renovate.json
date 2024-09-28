@@ -19,7 +19,8 @@
       "depNameTemplate": "aptible/supercronic",
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "loose",
-      "extractVersionTemplate": "^v?(?<version>.*)$"
+      "extractVersionTemplate": "^v?(?<version>.*)$",
+      "depVersionTemplate": "v{{version}}"
     },
     {
       "fileMatch": ["freshrss/Dockerfile"],
@@ -29,7 +30,8 @@
       "depNameTemplate": "just-containers/s6-overlay",
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "loose",
-      "extractVersionTemplate": "^v?(?<version>.*)$"
+      "extractVersionTemplate": "^v?(?<version>.*)$",
+      "depVersionTemplate": "v{{version}}"
     },
     {
       "fileMatch": ["freshrss/Dockerfile"],
