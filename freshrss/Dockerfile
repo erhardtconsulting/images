@@ -15,7 +15,7 @@ ARG USER="freshrss"
 # Set versions
 ARG SUPERCRONIC_VERSION="0.2.31"
 ARG S6_OVERLAY_VERSION="3.1.1.2"
-ARG FRESHRSS_VERSION="1.21.0"
+ARG FRESHRSS_VERSION="1.24.3"
 
 # Set container root to read-only and production
 ENV S6_READ_ONLY_ROOT="1"
