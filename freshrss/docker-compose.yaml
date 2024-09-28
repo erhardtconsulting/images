@@ -13,7 +13,6 @@ services:
       - "8080:80"
     tmpfs:
       - /tmp:uid=2000,gid=2000,mode=0755
-      - /run:exec,uid=2000,gid=2000,mode=0755
 
 volumes:
   freshrss_data:

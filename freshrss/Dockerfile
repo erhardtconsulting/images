@@ -79,7 +79,8 @@ RUN if [[ "${TARGETOS}" != "linux" ]]; then echo "unsupported os: ${TARGETOS}" &
     # Disable updating
     sed -r -i "\\#disable_update#s#^.*#\t'disable_update' => true,#" /opt/freshrss/config.default.php; \
     # Fix permissions
-    chown -R freshrss:freshrss /opt/freshrss;
+    chown -R freshrss:freshrss /opt/freshrss; \
+    chown -R freshrss:freshrss /run;
 
 # Set up user
 USER ${USER}
@@ -90,7 +91,7 @@ WORKDIR /opt/freshrss
 # Expose port for FrankenPHP
 EXPOSE 8080
 
-VOLUME [ "/run", "/tmp" ]
+VOLUME [ "/tmp" ]
 
 # Run s6
 ENTRYPOINT ["/init"]
