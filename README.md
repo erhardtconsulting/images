@@ -12,8 +12,6 @@ Security is paramount in containerized environments. Running containers with roo
 
 [FreshRSS](https://freshrss.org/) is a self-hosted RSS feed aggregator that allows you to collect and read news and articles from various sources in one place. It's lightweight, customizable, and supports multiple users.
 
-Our rootless Docker image for FreshRSS is designed to run securely in Kubernetes clusters. This image includes both FreshRSS and FrankenPHP, optimized for secure, rootless operation.
-
 ## Disclaimer
 
 Erhardt Consulting GmbH is not affiliated with the projects contained within these images. All images are provided "as-is" without any warranty. We aim to offer helpful resources, but we cannot guarantee the functionality or security of the applications themselves.

@@ -4,12 +4,12 @@
     {
       "fileMatch": ["freshrss/Dockerfile"],
       "matchStrings": [
-        "ARG FRANKENPHP_VERSION=\"(?<currentValue>[^\"]+)\""
+        "ARG PHP_VERSION=\"(?<currentValue>[^\"]+)\""
       ],
-      "depNameTemplate": "dunglas/frankenphp",
+      "depNameTemplate": "php",
       "datasourceTemplate": "docker",
       "versioningTemplate": "semver",
-      "extractVersionTemplate": "^(?<version>[0-9.]+)-bookworm$"
+      "extractVersionTemplate": "^(?<version>[0-9.]+)-fpm-bookworm$"
     },
     {
       "fileMatch": ["freshrss/Dockerfile"],

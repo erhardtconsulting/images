@@ -1,6 +1,7 @@
 services:
   freshrss:
     image: ghcr.io/erhardtconsulting/freshrss
+    read_only: true
     build:
       context: .
     container_name: freshrss
@@ -10,7 +11,7 @@ services:
     volumes:
       - freshrss_data:/opt/freshrss/data
     ports:
-      - "8080:80"
+      - "8080:8080"
     tmpfs:
       - /tmp:uid=2000,gid=2000,mode=0755
 

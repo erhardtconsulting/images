@@ -9,7 +9,7 @@
 
 This repository provides a rootless Docker image for [FreshRSS](https://freshrss.org), a self-hosted RSS feed aggregator that allows you to collect and read news and articles from various sources in one place. FreshRSS is lightweight, customizable, and supports multiple users.
 
-Our rootless Docker image is specifically designed to run securely in Kubernetes clusters without granting root privileges. It includes both FreshRSS and [FrankenPHP](https://frankenphp.dev/), optimized for secure, rootless operation.
+Our rootless Docker image is specifically designed to run securely in Kubernetes clusters without granting root privileges. It includes FreshRSS, running on NGINX and PHP-FPM, optimized for secure, rootless operation.
 
 ## Why Use a Rootless Image?
 
@@ -36,8 +36,17 @@ This container uses the user "freshrss" with UID 2000 and GID 2000 for running a
 
 ### Volume Mounts
 
-- **Data Volume**: Mount a writable volume to `/opt/freshrss/data`.
-- **Extensions Volume** *(optional)*: Mount a writable volume to `/opt/freshrss/extensions`.
+**Necessary Volumes:**
+
+- **Data Volume**: `/opt/freshrss/data` \
+  This volume is used for storing the data and caches of FreshRSS. It has to be writeable by the user.
+- **Temporary Volume**: `/tmp` \
+  This volume is used for storing process and session data. It has to be writeable by the user.
+
+**Optional Volumes:**
+
+- **Extensions Volume**: `/opt/freshrss/extensions` \
+  This volume is used for storing FreshRSS extensions. Download and install your extensions there, and they will be automatically loaded by FreshRSS.
 
 ### Environment Variables
 
@@ -95,16 +104,11 @@ spec:
               mountPath: /opt/freshrss/data
             - name: tmp-tmpfs
               mountPath: /tmp
-            - name: run-tmpfs
-              mountPath: /run
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: freshrss-data
         - name: tmp-tmpfs
-          emptyDir:
-            medium: Memory
-        - name: run-tmpfs
           emptyDir:
             medium: Memory
 ```
