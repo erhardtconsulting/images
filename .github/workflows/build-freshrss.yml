@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'freshrss/**'
+      - '.github/workflows/build-freshrss.yml'
   workflow_dispatch:
 
 permissions:
@@ -39,6 +40,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
       - name: Extract FRESHRSS_VERSION from Dockerfile
         id: vars
         run: |
@@ -54,3 +62,5 @@ jobs:
           tags: |
             ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.FRESHRSS_VERSION }}
             ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest
+            docker.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.FRESHRSS_VERSION }}
+            docker.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest
