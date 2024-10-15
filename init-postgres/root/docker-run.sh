@@ -66,4 +66,5 @@ for dbname in ${INIT_PG_DBNAME}; do
     fi
     printf "\e[1;32m%-6s\e[m\n" "Update User Privileges on Database ..."
     psql --command "GRANT ALL PRIVILEGES ON DATABASE \"${dbname}\" TO \"${INIT_PG_USERNAME}\";"
+    psql --dbname "${dbname}" --command "GRANT ALL PRIVILEGES ON SCHEMA \"public\" TO \"${INIT_PG_USERNAME}\";"
 done
