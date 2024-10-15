@@ -1,0 +1,66 @@
+name: "Init-Postgres: Build & Publish Docker Image"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'init-postgres/**'
+      - '.github/workflows/build-init-postgres.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: "init-postgres"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+
+      - name: Set up QEMU for multi-architecture build
+        uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3
+        with:
+          install: true
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Extract PG_CLIENT_VERSION from Dockerfile
+        id: vars
+        run: |
+          PG_CLIENT_VERSION=$(grep -E '^ARG PG_CLIENT_VERSION=' init-postgres/Dockerfile | cut -d '=' -f 2 | tr -d '"')
+          echo "PG_CLIENT_VERSION=$PG_CLIENT_VERSION" >> $GITHUB_ENV
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@32945a339266b759abcbdc89316275140b0fc960 # v6
+        with:
+          context: init-postgres
+          platforms: "linux/386,linux/amd64,linux/arm64,linux/arm/v7"
+          push: true
+          tags: |
+            ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.PG_CLIENT_VERSION }}
+            ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest
+            docker.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.PG_CLIENT_VERSION }}
+            docker.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest
