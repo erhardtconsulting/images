@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "github>erhardtconsulting/renovate-rules:default",
-    "github>erhardtconsulting/images/freshrss:renovate"
+    "github>erhardtconsulting/images//freshrss/renovate"
   ],
   "packageRules": [
     {
