@@ -1,13 +1,12 @@
 FROM docker.io/library/alpine:3.20
 
-ARG TARGETPLATFORM
+# renovate: datasource=repology depName=alpine_3_20/postgresql16-client versioning=loose
 ARG PG_CLIENT_VERSION="16.3-r0"
-ARG CHANNEL
 
 USER root
 WORKDIR /app
 
-#hadolint ignore=DL3018
+# Install dependencies
 RUN \
     apk add --no-cache \
         bash \

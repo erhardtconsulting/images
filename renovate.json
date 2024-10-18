@@ -3,13 +3,5 @@
   "extends": [
     "github>erhardtconsulting/renovate-rules:default",
     "github>erhardtconsulting/images//freshrss/renovate"
-  ],
-  "packageRules": [
-    {
-      "matchDatasources": [
-        "docker"
-      ],
-      "pinDigests": false
-    }
   ]
 }
