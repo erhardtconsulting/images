@@ -1,11 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    "github>erhardtconsulting/renovate-rules//default-rules.json",
-    "github>erhardtconsulting/images//freshrss/renovate.json"
+    "github>erhardtconsulting/renovate-rules:default",
+    "github>erhardtconsulting/images:freshrss/renovate"
   ],
-  "dependencyDashboard": false,
   "packageRules": [
     {
       "matchDatasources": [
