@@ -27,9 +27,6 @@ RUN set -ex \
   # Install supercronic
   && curl -fLo "/usr/local/bin/supercronic" "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH}" \
   && chmod +x "/usr/local/bin/supercronic" \
-  # Add user for nextcloud
-  && addgroup -g ${GID} nextcloud \
-  && adduser -u ${UID} -h /opt/nextcloud -H -G nextcloud -s /sbin/nologin -D nextcloud \
   # Install
   && apk update \
   && apk upgrade \
@@ -39,6 +36,7 @@ RUN set -ex \
     bash \
     freetype \
     freetype-dev \
+    gettext \
     gmp \
     gmp-dev \
     gnupg \
@@ -46,6 +44,7 @@ RUN set -ex \
     icu-libs \
     imagemagick \
     imagemagick-dev \
+    imagemagick-svg \
     libgomp \
     libjpeg-turbo \
     libjpeg-turbo-dev \
@@ -67,6 +66,9 @@ RUN set -ex \
     pcre-dev \
     postgresql-dev \
     postgresql-libs \
+    py3-jinja2 \
+    py3-yaml \
+    python3 \
     samba-client \
     sudo \
     supervisor \
@@ -78,7 +80,7 @@ RUN set -ex \
   && docker-php-ext-configure gd --with-freetype=/usr --with-jpeg=/usr \
   && docker-php-ext-configure ldap \
   && docker-php-ext-configure zip \
-  && docker-php-ext-install \
+  && docker-php-ext-install -j "$(nproc)" \
     bcmath \
     exif \
     gd \
@@ -92,6 +94,7 @@ RUN set -ex \
     pdo_mysql \
     pdo_pgsql \
     pgsql \
+    sysvsem \
     zip \
   && pecl channel-update pecl.php.net \
   && pecl install APCu-5.1.24 \
@@ -128,8 +131,13 @@ RUN set -ex \
     pcre-dev \
     postgresql-dev \
   && rm -rf /var/cache/apk/* \
+  # Enable PHP production config
+  && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+# Step 2: Install nextcloud
+RUN set -ex \
   && mkdir -p /opt/nextcloud \
-# Download Nextcloud
+  # Download Nextcloud
   && cd /tmp \
   && NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" \
   && NEXTCLOUD_METADATA="nextcloud-${NEXTCLOUD_VERSION}.metadata" \
@@ -138,7 +146,7 @@ RUN set -ex \
   && wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256 \
   && wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc \
   && wget -q https://nextcloud.com/nextcloud.asc \
-# Verify checksum
+  # Verify checksum
   && echo "Verifying both integrity and authenticity of ${NEXTCLOUD_TARBALL}..." \
   && CHECKSUM_STATE=$(echo -n $(sha256sum -c ${NEXTCLOUD_TARBALL}.sha256) | tail -c 2) \
   && if [ "${CHECKSUM_STATE}" != "OK" ]; then echo "Warning! Checksum does not match!" && exit 1; fi \
@@ -147,19 +155,51 @@ RUN set -ex \
   && if [ -z "${FINGERPRINT}" ]; then echo "Warning! Invalid GPG signature!" && exit 1; fi \
   && if [ "${FINGERPRINT}" != "${NEXTCLOUD_GPG}" ]; then echo "Warning! Wrong GPG fingerprint!" && exit 1; fi \
   && echo "All seems good, now unpacking ${NEXTCLOUD_TARBALL}..." \
-# Extract
+  # Extract
   && tar xjf ${NEXTCLOUD_TARBALL} --strip-components=1 -C /opt/nextcloud \
-# Remove nextcloud updater for safety
+  # Preserve install config
+  && mkdir -p /opt/nextcloud.install \
+  && cp -r /opt/nextcloud/config/* /opt/nextcloud.install \
+  # Remove nextcloud updater for safety
   && rm -rf /opt/nextcloud/updater \
   && rm -rf /tmp/* /root/.gnupg \
-# Wipe excess directories
-  && rm -rf /var/www/*
+  && rm -rf /opt/nextcloud/data /opt/nextcloud/config \
+  && ln -sf /data/data /opt/nextcloud/data \
+  && ln -sf /data/config /opt/nextcloud/config \
+  && ln -sf /data/userapps /opt/nextcloud/userapps \
+  && ln -sf /data/php.nextcloud.ini "$PHP_INI_DIR/conf.d/nextcloud.ini"
 
+# Copy config
 COPY root /
 
-VOLUME ["/data"]
+# Set user
+USER nobody:nobody
 
+# Set up the working directory
+WORKDIR /opt/nextcloud
+
+# Expose port 8080
 EXPOSE 8080
 
+# Set tmp and data as volume
+VOLUME ["/tmp", "/data"]
+
+# Set env variables
+ENV \
+  ENABLE_CONFIG_AUTOCONFIG="false" \
+  ENABLE_CONFIG_DOCKER="true" \
+  ENABLE_CONFIG_REDIS="false" \
+  ENABLE_CONFIG_REVERSE_PROXY="false" \
+  ENABLE_CONFIG_S3="false" \
+  ENABLE_CONFIG_SMTP="false" \
+  ENABLE_CONFIG_SWIFT="false" \
+  ENABLE_CRON="true" \
+  PHP_APCU_SHM_SIZE="128M" \
+  PHP_MAX_EXECUTION_TIME="600" \
+  PHP_MEMORY_LIMIT="512M"
+
+# Set tini as entrypoing
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["/usr/local/bin/run.sh"]
+
+# Run everthing
+CMD ["/docker-run.sh"]
