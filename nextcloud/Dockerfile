@@ -132,10 +132,8 @@ RUN set -ex \
     postgresql-dev \
   && rm -rf /var/cache/apk/* \
   # Enable PHP production config
-  && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
-
-# Step 2: Install nextcloud
-RUN set -ex \
+  && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+  # Install nextcloud
   && mkdir -p /opt/nextcloud \
   # Download Nextcloud
   && cd /tmp \
@@ -162,7 +160,7 @@ RUN set -ex \
   && cp -r /opt/nextcloud/config/* /opt/nextcloud.install \
   # Remove nextcloud updater for safety
   && rm -rf /opt/nextcloud/updater \
-  && rm -rf /tmp/* /root/.gnupg \
+  && rm -rf /tmp/* \
   && rm -rf /opt/nextcloud/data /opt/nextcloud/config \
   && ln -sf /data/data /opt/nextcloud/data \
   && ln -sf /data/config /opt/nextcloud/config \
