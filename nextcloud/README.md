@@ -43,8 +43,6 @@ Everything is bundled in the newest stable version.
 ### Build-time arguments
 * **NEXTCLOUD_GPG**: Fingerprint of Nextcloud signing key
 * **NEXTCLOUD_VERSION**: Nextcloud version to install
-* **UID**: User ID of the nextcloud user (default 1501)
-* **GID**: Group ID of the nextcloud user (default 1501)
 
 ### Exposed ports
 - **80**: NGinx webserver running Nextcloud.
@@ -200,24 +198,6 @@ When you run the container it will reset the permissions on the /data folder. Th
 
 Some parameters in the Nextcloud configuration will be overwritten by the file in `root/opt/nextcloud/config/docker.config.php`
 
-## Group/User ID
-
-You can change the numerical user id and group id via build arguments.
-
-```
-$ git clone https://github.com/chrootLogin/docker-nextcloud.git && cd docker-nextcloud
-$ docker build -t rootlogin/nextcloud --build-arg UID=1000 --build-arg GID=1000 .
-$ docker run -p 80:80 rootlogin/nextcloud
-```
-
 ## Contribution
 
 This stuff is released under GPL. I'm happy about every pull-request, that makes this tool better.
-
-## Donate
-
-If you want to donate for this project you can do it through [Github Sponsorship](https://github.com/sponsors/chrootlogin/).
-
-Or you can send me some crypto-coins to the following address:
-
-**Bitcoin**: bc1qvemyhud469qe4v6lcsn8sxu5e57m4sw3u2ujff
