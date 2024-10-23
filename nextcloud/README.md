@@ -45,6 +45,89 @@ docker create volume nextcloud_data
 docker run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 erhardtconsulting/nextcloud
 ```
 
+### Environment Variables
+
+| Environment variable   | Default | Description                                                                |
+|------------------------|---------|----------------------------------------------------------------------------|
+| PHP_APCU_SHM_SIZE      | 128M    | Size of each shared memory segment of APCu                                 |
+| PHP_MAX_EXECUTION_TIME | 600     | Maximum time a php script is allowed to run                                |
+| PHP_MEMORY_LIMIT       | 512M    | Sets the maximum amount of memory that a php script is allowed to allocate |
+| ENABLE_CONFIG_DOCKER   | true    | Enables recommended config for containers (docker.config.php)              |
+| ENABLE_CRON            | true    | Enables or disables the integrated supercronic service                     |
+
+**Redis configuration**
+
+| Environment variable | Default | Description                                |
+|----------------------|---------|--------------------------------------------|
+| ENABLE_CONFIG_REDIS  | false   | You must enable this variable to use redis |
+| REDIS_HOST           |         | Redis host                                 |
+| REDIS_HOST_PASSWORD  |         | Redis password (if needed)                 |
+| REDIS_HOST_PORT      | 6379    | Redis port                                 |
+
+**Reverse proxy configuration**
+
+| Environment variable        | Default | Description                                                                           |
+|-----------------------------|---------|---------------------------------------------------------------------------------------|
+| ENABLE_CONFIG_REVERSE_PROXY | false   | You must enable this variable to configure reverse proxy settings                     |
+| OVERWRITEHOST               |         | Host that should be used by Nextcloud                                                 |
+| OVERWRITEPROTOCOL           |         | Protocol that should be used by Nextcloud                                             |
+| OVERWRITECLIURL             |         | URL to be used by commandline tools                                                   |
+| OVERWRITEWEBROOT            |         | Webroot to use for generating Nextcloud URLs                                          |
+| OVERWRITECONDADDR           |         | Defines a manual override condition as a regular expression for the remote IP address |
+| TRUSTED_PROXIES             |         | List of trusted proxy servers (e.g. 10.0.0.0/8 in Kubernetes)                         |
+
+**S3 object store configuration**
+
+| Environment variable         | Default | Description                                            |
+|------------------------------|---------|--------------------------------------------------------|
+| ENABLE_CONFIG_S3             | false   | You must enable this variable to configure s3 settings |
+| OBJECTSTORE_S3_BUCKET        |         | Name of objectstore bucket                             |
+| OBJECTSTORE_S3_SSL           |         | Enable SSL                                             |
+| OBJECTSTORE_S3_USEPATH_STYLE |         | Use path style for bucket access                       |
+| OBJECTSTORE_S3_LEGACYAUTH    |         | Use legacy authentication                              |
+| OBJECTSTORE_S3_AUTOCREATE    |         | Enable auto-creation of buckets                        |
+| OBJECTSTORE_S3_REGION        |         | Bucket region                                          |
+| OBJECTSTORE_S3_HOST          |         | Host of objectstore                                    |
+| OBJECTSTORE_S3_PORT          |         | Port of the objectstore bucket server                  |
+| OBJECTSTORE_S3_STORAGE_CLASS |         | Storage class to use if necessary                      |
+| OBJECTSTORE_S3_OBJECT_PREFIX |         | Object prefix to use if necessary                      |
+| OBJECTSTORE_S3_KEY           |         | Access key                                             |
+| OBJECTSTORE_S3_SECRET        |         | Secret key                                             |
+| OBJECTSTORE_S3_SSE_C_KEY     |         | Key for server side encryption if necessary            |
+
+**SMTP configuration**
+
+| Environment variable | Default | Description                                              |
+|----------------------|---------|----------------------------------------------------------|
+| ENABLE_CONFIG_SMTP   | false   | You must enable this variable to configure smtp settings |
+| SMTP_HOST            |         | Hostname of the SMTP Server                              |
+| SMTP_PORT            |         | Port of the SMTP Server                                  |
+| SMTP_SECURE          |         | If encryption should be used                             |
+| SMTP_NAME            |         | SMTP username                                            |
+| SMTP_PASSWORD        |         | SMTP password                                            |
+| SMTP_AUTHTYPE        | LOGIN   | Authentication type used for SMTP                        |
+| MAIL_FROM_ADDRESS    |         | Part before the @ used for sending mail                  |
+| MAIL_DOMAIN          |         | Domain part of the sending address                       |
+
+**Auto-configuration**
+
+You can enable auto-configuration to setup your Nextcloud instance directly by this container. Make sure to remove all environment variables after the first run, to make sure there are no leaks.
+
+| Environment variable     | Default | Description                                             |
+|--------------------------|---------|---------------------------------------------------------|
+| ENABLE_CONFIG_AUTOCONFIG | false   | You must enable this variable to use auto-configuration |
+| SQLITE_DATABASE          |         | When using SQLite: Database name                        |
+| MYSQL_DATABASE           |         | When using MySQL/MariaDB: Database name                 |
+| MYSQL_USER               |         | When using MySQL/MariaDB: Database username             |
+| MYSQL_PASSWORD           |         | When using MySQL/MariaDB: Database password             |
+| MYSQL_HOST               |         | When using MySQL/MariaDB: Database host                 |
+| POSTGRES_DB              |         | When using PostgreSQL: Database name                    |
+| POSTGRES_USER            |         | When using PostgreSQL: Database username                |
+| POSTGRES_PASSWORD        |         | When using PostgreSQL: Database password                |
+| POSTGRES_HOST            |         | When using PostgreSQL: Database host                    |
+| ADMIN_USERNAME           |         | Admin user to create                                    |
+| ADMIN_PASSWORD           |         | Password of the newly created admin user                |
+
 ### Volume Mounts
 
 **Necessary Volumes:**
@@ -54,61 +137,10 @@ docker run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 erhardtco
 - **Temporary Volume**: `/tmp` \
   This volume is used for storing process and session data. It has to be writeable by the container user.
 
-### Included software
-
-* Alpine Linux
-* PHP 8
-* APCu
-* Nginx
-* Supercronic
-* SupervisorD
-
-Everything is bundled in the newest stable version.
-
-### Tags
-
-* **latest**: Latest stable Nextcloud version (PHP 7)
-* **X.X.X**: Stable version tags of Nextcloud (e.g. v9.0.52) (Version >= 12.0.0 use PHP 7)
-* **develop**: Latest development branch (may unstable)
-* **TAG-ARCHITECTURE** (Example: develop-arm64): Tag with fixed processor architecture
-
-### Build-time arguments
-* **NEXTCLOUD_GPG**: Fingerprint of Nextcloud signing key
-* **NEXTCLOUD_VERSION**: Nextcloud version to install
-
 ### Exposed ports
-- **80**: NGinx webserver running Nextcloud.
+- **8080**: Nginx webserver running Nextcloud.
 
-### Volumes
-- **/data** : All data, including config and user downloaded apps (in subfolders).
-
-## Usage
-
-### Standalone
-
-You can run Nextcloud without a separate database, but I don't recommend it for production setups as it uses SQLite. Another solution is to use an external database provided elsewhere, you can enter the credentials in the installer.
-
-1. Pull the image: `docker pull erhardtconsulting/nextcloud`
-2. Run it: `docker run -d --name nextcloud -p 8080:8080 -v my_local_data_folder:/data erhardtconsulting/nextcloud` (Replace *my_local_data_folder* with the path where do you want to store the persistent data)
-3. Open [localhost](http://localhost) and profit!
-
-The first time you run the application, you can use the Nextcloud setup wizard to install everything. Afterwards it will run directly.
-
-### With a database container
-
-For standard setups I recommend the use of MariaDB, because it is more reliable than SQLite. For example, you can use the offical docker image of MariaDB. For more information refer to the according docker image.
-
-```
-docker pull erhardtconsulting/nextcloud && docker pull mariadb:10
-
-docker run -d --name nextcloud_db -v my_db_persistence_folder:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=supersecretpassword -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud -e MYSQL_PASSWORD=supersecretpassword mariadb:10
-
-docker run -d --name nextcloud --link nextcloud_db:nextcloud_db -p 8080:8080 -v my_local_data_folder:/data erhardtconsulting/nextcloud
-```
-
-*The auto-connection of the database to nextcloud is not implemented yet. This is why you need to do that manually.*
-
-## Configuration
+## Running OCC Command
 
 You can configure Nextcloud via the occ command:
 
@@ -120,7 +152,7 @@ The command uses the same user as the webserver.
 
 ## Other
 
-### Nginx frontend proxy
+### Nginx Frontend Proxy
 
 This container does not support SSL or similar and is therefore not made for running directly in the world wide web. You better use a frontend proxy like another Nginx.
 
@@ -128,46 +160,46 @@ Here are some sample configs (The config need to be adapted):
 
 ```
 server {
-	listen 80;
-	server_name cloud.example.net;
+  listen 80;
+  server_name cloud.example.net;
 
-	# ACME handling for Letsencrypt
-	location /.well-known/acme-challenge {
+  # ACME handling for Letsencrypt
+  location /.well-known/acme-challenge {
   	alias /var/www/letsencrypt/;
-  	default_type "text/plain";
- 		try_files $uri =404;
-	}
+    default_type "text/plain";
+ 	try_files $uri =404;
+  }
 
-	location / {
+  location / {
   	return 301 https://$host$request_uri;
-	}
+  }
 }
 
 server {
   listen 443 ssl spdy;
   server_name cloud.example.net;
 
-	ssl_certificate /etc/letsencrypt.sh/certs/cloud.example.net/fullchain.pem;
+  ssl_certificate /etc/letsencrypt.sh/certs/cloud.example.net/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt.sh/certs/cloud.example.net/privkey.pem;
   ssl_trusted_certificate /etc/letsencrypt.sh/certs/cloud.example.net/chain.pem;
-	ssl_dhparam /etc/nginx/dhparam.pem;
-	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_dhparam /etc/nginx/dhparam.pem;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
-	ssl_session_cache shared:SSL:10m;
-	ssl_session_timeout 30m;
+  ssl_session_cache shared:SSL:10m;
+  ssl_session_timeout 30m;
 
-	ssl_prefer_server_ciphers on;
-	ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+  ssl_prefer_server_ciphers on;
+  ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
 
-	ssl_stapling on;
-	ssl_stapling_verify on;
+  ssl_stapling on;
+  ssl_stapling_verify on;
 
-	add_header Strict-Transport-Security "max-age=31536000";
-
-	access_log  /var/log/nginx/docker-nextcloud_access.log;
+  add_header Strict-Transport-Security "max-age=31536000";
+  
+  access_log  /var/log/nginx/docker-nextcloud_access.log;
   error_log   /var/log/nginx/docker-nextcloud_error.log;
 
-	location / {
+  location / {
     proxy_buffers 16 4k;
     proxy_buffer_size 2k;
 
@@ -182,10 +214,15 @@ server {
 
     client_max_body_size 10G;
 
-    proxy_pass http://127.0.0.1:8000;
+    proxy_pass http://127.0.0.1:8080;
   }
 }
 ```
+
+## Additional Resources
+
+- **Nextcloud Code Repository**: [GitHub](https://github.com/nextcloud/server)
+- **Nextcloud Documentation**: [Official Docs](https://docs.nextcloud.com)
 
 ## Issues and Contributions
 
@@ -195,4 +232,4 @@ For issues related to the container itself, please open an issue in this reposit
 
 Erhardt Consulting GmbH is not affiliated with the Nextcloud project or its contributors. This rootless Docker image is provided "as is" to facilitate the deployment of Nextcloud in Kubernetes clusters without root privileges. All images are provided without warranty of any kind.
 
-Please report any issues unrelated to containerization directly to the Nextcloud project. The code for the container configuration is provided under the terms of the [MIT License](LICENSE). Note that this license does not apply to the application code within the containers, which may be distributed under different, possibly more restrictive licenses. Users are responsible for complying with the licenses of the underlying applications.
+Please report any issues unrelated to containerization directly to the Nextcloud project. The code for the container configuration is provided under the terms of the [MIT License](../LICENSE). Note that this license does not apply to the application code within the containers, which may be distributed under different, possibly more restrictive licenses. Users are responsible for complying with the licenses of the underlying applications.
