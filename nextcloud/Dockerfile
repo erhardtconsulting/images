@@ -1,27 +1,17 @@
 ARG PHP_VERSION="8.3.12"
-ARG BUILD_DATE
-ARG VCS_REF
 
 FROM php:${PHP_VERSION}-fpm-alpine
 
+# Targetarch, will be set by Docker
 ARG TARGETARCH
 
-LABEL maintainer="Simon Erhardt <hello@rootlogin.ch>" \
-  org.label-schema.name="Nextcloud" \
-  org.label-schema.description="Minimal Nextcloud docker image based on Alpine Linux." \
-  org.label-schema.build-date=$BUILD_DATE \
-  org.label-schema.vcs-ref=$VCS_REF \
-  org.label-schema.vcs-url="https://github.com/erhardtconsulting/images" \
-  org.label-schema.schema-version="1.0"
-
+# Nextcloud gpg key for verification
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 
+# Package versions
 ARG NEXTCLOUD_VERSION="30.0.1"
 ARG SUPERCRONIC_VERSION="0.2.33"
 ARG IMAGICK_VERSION="3.7.0"
-
-ARG UID=1501
-ARG GID=1501
 
 RUN set -ex \
   # Install supercronic
@@ -183,18 +173,22 @@ EXPOSE 8080
 VOLUME ["/tmp", "/data"]
 
 # Set env variables
-ENV \
-  ENABLE_CONFIG_AUTOCONFIG="false" \
-  ENABLE_CONFIG_DOCKER="true" \
-  ENABLE_CONFIG_REDIS="false" \
-  ENABLE_CONFIG_REVERSE_PROXY="false" \
-  ENABLE_CONFIG_S3="false" \
-  ENABLE_CONFIG_SMTP="false" \
-  ENABLE_CONFIG_SWIFT="false" \
-  ENABLE_CRON="true" \
-  PHP_APCU_SHM_SIZE="128M" \
-  PHP_MAX_EXECUTION_TIME="600" \
-  PHP_MEMORY_LIMIT="512M"
+ENV ENABLE_CONFIG_AUTOCONFIG="false" \
+    ENABLE_CONFIG_DOCKER="true" \
+    ENABLE_CONFIG_REDIS="false" \
+    ENABLE_CONFIG_REVERSE_PROXY="false" \
+    ENABLE_CONFIG_S3="false" \
+    ENABLE_CONFIG_SMTP="false" \
+    ENABLE_CONFIG_SWIFT="false" \
+    ENABLE_CRON="true" \
+    PHP_APCU_SHM_SIZE="128M" \
+    PHP_MAX_EXECUTION_TIME="600" \
+    PHP_MEMORY_LIMIT="512M"
+
+LABEL org.opencontainers.image.description="Rootless all-in-one Nextcloud image, based on Alpine Linux" \
+      org.opencontainers.image.version="${NEXTCLOUD_VERSION}" \
+      org.opencontainers.image.authors="Simon Erhardt <simon@erhardt.consulting>" \
+      org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
 
 # Set tini as entrypoing
 ENTRYPOINT ["/sbin/tini", "--"]

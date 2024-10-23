@@ -3,6 +3,7 @@
 # Check if /tmp is writeable
 if [ ! -w "/tmp" ]; then
   echo "⛔ Directory '/tmp' is not writeable by the user. Aborting!"
+  echo "UID: $(id)"
   echo "Directory Info: $(ls -lhd /tmp)"
   exit 255
 fi
@@ -18,26 +19,11 @@ fi
 # Bootstrap application
 echo "Preparing environment..."
 
-# Check if config exists
-if [ ! -d /data/config ]; then
-  mkdir /data/config
-
-  # Allow installation
-  touch /data/config/CAN_INSTALL
-
-  # Copy sample config
-  cp -f /opt/nextcloud.install/config.sample.php /data/config/
-fi
-
-# Create additional directories
-mkdir -p /data/data /data/tmp /data/userapps /tmp/sessions
+# Make sure additional directories exist
+mkdir -p /data/config /data/data /data/tmp /data/userapps /tmp/sessions
 
 # Build nextcloud php config
 envsubst < /opt/nextcloud.install/nextcloud.ini > /data/php.nextcloud.ini
-
-if [ "$ENABLE_CONFIG_AUTOCONFIG" = "true" ]; then
-  cp /opt/nextcloud.install/autoconfig.php /data/config/
-fi
 
 if [ "$ENABLE_CONFIG_DOCKER" = "true" ]; then
   cp /opt/nextcloud.install/docker.config.php /data/config/
@@ -63,8 +49,30 @@ if [ "$ENABLE_CONFIG_SWIFT" = "true" ]; then
   cp /opt/nextcloud.install/swift.config.php /data/config/
 fi
 
-# Copy docker config
-cp /opt/nextcloud.install/docker.config.php /data/config/
+# Check if config exists
+if [ ! -f /data/config/config.php ]; then
+  mkdir /data/config
+
+  # Allow installation
+  touch /data/config/CAN_INSTALL
+
+  if [ "$ENABLE_CONFIG_AUTOCONFIG" = "true" ]; then
+    cp /opt/nextcloud.install/autoconfig.php /data/config/
+
+    # Execute autoconfig
+    (
+      cd /opt/nextcloud || { echo "Nextcloud not found"; exit 1; }
+      php index.php &>/dev/null
+    )
+  fi
+else
+  # run database upgrade
+  /usr/local/bin/occ upgrade
+fi
+
+if [ -f /data/config/config.php ] && [ "$ENABLE_CONFIG_AUTOCONFIG" = "true" ]; then
+  echo "⚠️ ENABLE_CONFIG_AUTOCONFIG should be removed on an already configured instance!"
+fi
 
 # Run supervisord
 if [ "$ENABLE_CRON" = "true" ]; then

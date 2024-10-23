@@ -45,7 +45,7 @@ jobs:
         with:
           registry: docker.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract NEXTCLOUD_VERSION from Dockerfile
         id: vars
@@ -64,3 +64,20 @@ jobs:
             ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest
             docker.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }}
             docker.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest
+
+      - name: Log in to Docker Hub (as rootlogin)
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        with:
+          registry: docker.io
+          username: rootlogin
+          password: ${{ secrets.DOCKERHUB_ROOTLOGIN_TOKEN }}
+
+      - name: Push image to Docker Hub (as rootlogin)
+        run: |
+          docker buildx imagetools create \
+            --tag ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
+            --tag ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest \
+            --tag docker.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
+            --tag docker.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest \
+            docker.io/rootlogin/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
+            docker.io/rootlogin/${{ env.IMAGE_NAME }}:latest
