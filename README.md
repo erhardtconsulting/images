@@ -12,6 +12,10 @@ Security is paramount in containerized environments. Running containers with roo
 
 [FreshRSS](https://freshrss.org/) is a self-hosted RSS feed aggregator that allows you to collect and read news and articles from various sources in one place. It's lightweight, customizable, and supports multiple users.
 
+### [Nextcloud](./nextcloud)
+
+[Nextcloud](https://nextcloud.com/) is a self-hosted platform that provides file storage, collaboration tools, and synchronization services. It allows users to store and share files, calendars, and contacts, and integrates with many third-party apps. Our rootless Nextcloud Docker image provides a secure way to deploy this powerful suite without root privileges, ideal for Kubernetes environments where security is critical.
+
 ## Disclaimer
 
 Erhardt Consulting GmbH is not affiliated with the projects contained within these images. All images are provided "as-is" without any warranty. We aim to offer helpful resources, but we cannot guarantee the functionality or security of the applications themselves.
