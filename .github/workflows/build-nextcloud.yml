@@ -75,9 +75,7 @@ jobs:
       - name: Push image to Docker Hub (as rootlogin)
         run: |
           docker buildx imagetools create \
-            --tag ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
-            --tag ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest \
-            --tag docker.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
-            --tag docker.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest \
-            docker.io/rootlogin/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
-            docker.io/rootlogin/${{ env.IMAGE_NAME }}:latest
+            --tag docker.io/rootlogin/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
+            --tag docker.io/rootlogin/${{ env.IMAGE_NAME }}:latest \
+            ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
+            ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest
