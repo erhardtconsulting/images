@@ -20,7 +20,6 @@ Security is a critical concern in containerized environments. Running containers
 - **Rootless Operation**: Enhances security by running without root privileges.
 - **Kubernetes Ready**: Easily deployable in Kubernetes clusters.
 - **Volume Support**: Supports writable volumes for data and extensions.
-- **Configurable Timezone**: Set your local timezone using the `TZ` environment variable.
 
 ## Getting Started
 

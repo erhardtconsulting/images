@@ -1,34 +1,66 @@
-# Nextcloud docker image
+![Nextcloud Logo](https://s32.postimg.org/69nev7aol/Nextcloud_logo.png)
 
-![](https://s32.postimg.org/69nev7aol/Nextcloud_logo.png)
+# FreshRSS Rootless Docker Image
 
-[![Docker Repository on Quay](https://quay.io/repository/rootlogin/nextcloud/status "Docker Repository on Quay")](https://quay.io/repository/rootlogin/nextcloud) [![](https://images.microbadger.com/badges/version/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/rootlogin/nextcloud.svg)](http://microbadger.com/images/rootlogin/nextcloud "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/rootlogin/nextcloud.svg)](https://microbadger.com/images/rootlogin/nextcloud "Get your own commit badge on microbadger.com")
+- **Official Website**: [Nextcloud](https://nextcloud.com)
+- **Project License**: [GNU AGPL 3](https://www.gnu.org/licenses/agpl-3.0.html)
 
-Easy usable docker image for [Nextcloud](http://nextcloud.com), the community fork of OwnCloud.
+## Overview
+
+This repository provides a rootless Docker image for Nextcloud, a self-hosted platform for file sharing, collaboration, and synchronization. It allows users to store and share files, calendars, and contacts, and integrates with many third-party apps to extend its functionality.
+
+Our rootless Docker image is specifically designed to run securely in Kubernetes clusters without granting root privileges. It includes Nextcloud, running on NGINX and PHP-FPM, optimized for secure, rootless operation.
+
+## Why Use a Rootless Image?
+
+Security is a critical concern in containerized environments. Running containers with root privileges can pose significant security risks, such as privilege escalation and unauthorized access. By utilizing a rootless Docker image, you enhance the security of your Kubernetes cluster by ensuring that the application operates with the least privileges necessary. This image differs from the original project image by enabling rootless execution, making it more suitable for environments where security is a priority.
 
 ## Features
 
-* Uses latest stable version of **Alpine Linux**, bundled with **PHP 7** and **NGinx**.
+* Uses latest stable version of **[Alpine Linux](https://alpinelinux.org)**, bundled with **[PHP 8](https://php.net)** and **[Nginx](https://nginx.org)**.
 * GPG check during building process.
 * APCu already configured.
-* LDAP support.
-* Cron runs all 15 mins (No need for web or AJAX cron).
+* Cron runs all 15 mins (Can be disabled).
 * Persistence for data, configuration and apps.
 * Nextcloud included apps that are persistent will be automatically updated during start.
 * Works with MySQL/MariaDB and PostgreSQL (server not included).
 * Supports uploads up to 10GB.
-* This image is also available via [Quay.io](http://quay.io/rootlogin/nextcloud).
-* **NEW!** Multi architecture support (x86,amd64,armv6,armv7,arm64,ppc64le,s390x)!
+* Multi-architecture support (x86,amd64,armv7,arm64)
 
-## Container environment
+## Getting Started
+
+**Run with podman**
+
+```bash
+podman create volume nextcloud_data
+
+podman run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 erhardtconsulting/nextcloud
+```
+
+**Run with docker**
+
+```bash
+docker create volume nextcloud_data
+
+docker run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 erhardtconsulting/nextcloud
+```
+
+### Volume Mounts
+
+**Necessary Volumes:**
+
+- **Data Volume**: `/data` \
+  This volume is used for storing the data and config of Nextcloud. It has to be writeable by the container user.
+- **Temporary Volume**: `/tmp` \
+  This volume is used for storing process and session data. It has to be writeable by the container user.
 
 ### Included software
 
 * Alpine Linux
-* PHP 7
+* PHP 8
 * APCu
-* NGinx
-* cron
+* Nginx
+* Supercronic
 * SupervisorD
 
 Everything is bundled in the newest stable version.
@@ -56,8 +88,8 @@ Everything is bundled in the newest stable version.
 
 You can run Nextcloud without a separate database, but I don't recommend it for production setups as it uses SQLite. Another solution is to use an external database provided elsewhere, you can enter the credentials in the installer.
 
-1. Pull the image: `docker pull rootlogin/nextcloud`
-2. Run it: `docker run -d --name nextcloud -p 80:80 -v my_local_data_folder:/data rootlogin/nextcloud` (Replace *my_local_data_folder* with the path where do you want to store the persistent data)
+1. Pull the image: `docker pull erhardtconsulting/nextcloud`
+2. Run it: `docker run -d --name nextcloud -p 8080:8080 -v my_local_data_folder:/data erhardtconsulting/nextcloud` (Replace *my_local_data_folder* with the path where do you want to store the persistent data)
 3. Open [localhost](http://localhost) and profit!
 
 The first time you run the application, you can use the Nextcloud setup wizard to install everything. Afterwards it will run directly.
@@ -67,9 +99,11 @@ The first time you run the application, you can use the Nextcloud setup wizard t
 For standard setups I recommend the use of MariaDB, because it is more reliable than SQLite. For example, you can use the offical docker image of MariaDB. For more information refer to the according docker image.
 
 ```
-# docker pull rootlogin/nextcloud && docker pull mariadb:10
-# docker run -d --name nextcloud_db -v my_db_persistence_folder:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=supersecretpassword -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud -e MYSQL_PASSWORD=supersecretpassword mariadb:10
-# docker run -d --name nextcloud --link nextcloud_db:nextcloud_db -p 80:80 -v my_local_data_folder:/data rootlogin/nextcloud
+docker pull erhardtconsulting/nextcloud && docker pull mariadb:10
+
+docker run -d --name nextcloud_db -v my_db_persistence_folder:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=supersecretpassword -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud -e MYSQL_PASSWORD=supersecretpassword mariadb:10
+
+docker run -d --name nextcloud --link nextcloud_db:nextcloud_db -p 8080:8080 -v my_local_data_folder:/data erhardtconsulting/nextcloud
 ```
 
 *The auto-connection of the database to nextcloud is not implemented yet. This is why you need to do that manually.*
@@ -78,52 +112,17 @@ For standard setups I recommend the use of MariaDB, because it is more reliable 
 
 You can configure Nextcloud via the occ command:
 
-```
-# docker exec -ti nextcloud occ [...YOUR COMMANDS...]
+```bash
+docker exec -ti nextcloud occ [...YOUR COMMANDS...]
 ```
 
 The command uses the same user as the webserver.
 
 ## Other
 
-### Migrate from OwnCloud
+### Nginx frontend proxy
 
-You can easily migrate an existing OwnCloud to this Nextcloud docker image.
-
-**Before starting, always make a backup of your old OwnCloud instance. I told you so!**
-
-1. Enable the maintenance mode on your old OwnCloud instance, e.g. `sudo -u www-data ./occ maintenance:mode --on`
-2. Create a new folder e.g. /var/my_nextcloud_data
-3. Create a new subfolder called "config" and copy the config.php from your existing instance in there.
-4. Copy your existing "data" folder to */var/my_nextcloud_data*/data
-5. Start the docker container: `docker run -d --name nextcloud -p 80:80 -v /var/my_nextcloud_data:/data rootlogin/nextcloud`
-6. Wait until everything is running.
-7. Start the Nextcloud migration command: `docker exec nextcloud occ upgrade`
-8. Disable the maintenance mode of Nextcloud: `docker exec nextcloud occ maintenance:mode --off`
-9. **Profit!**
-
-### Run container with systemd
-
-I usually run my containers on behalf of systemd, with the following config:
-
-```
-[Unit]
-Description=Docker - Nextcloud container
-Requires=docker.service
-After=docker.service
-
-[Service]
-Restart=always
-ExecStart=/usr/bin/docker run -p 127.0.0.1:8000:80 -v /data/nextcloud:/data --name nextcloud rootlogin/nextcloud
-ExecStop=/usr/bin/docker stop -t 2 nextcloud ; /usr/bin/docker rm -f nextcloud
-
-[Install]
-WantedBy=default.target
-```
-
-### NGinx frontend proxy
-
-This container does not support SSL or similar and is therefore not made for running directly in the world wide web. You better use a frontend proxy like another NGinx.
+This container does not support SSL or similar and is therefore not made for running directly in the world wide web. You better use a frontend proxy like another Nginx.
 
 Here are some sample configs (The config need to be adapted):
 
@@ -188,16 +187,12 @@ server {
 }
 ```
 
-## Frequently Asked Questions
+## Issues and Contributions
 
-**Why does the start take so long?**
+For issues related to the container itself, please open an issue in this repository. For issues concerning the Nextcloud application, refer to the [original Nextcloud repository](https://github.com/nextcloud/server).
 
-When you run the container it will reset the permissions on the /data folder. This means if you have much data, it takes some time. This helps to avoid permission issues.
+## Disclaimer
 
-## Overwritten config
+Erhardt Consulting GmbH is not affiliated with the Nextcloud project or its contributors. This rootless Docker image is provided "as is" to facilitate the deployment of Nextcloud in Kubernetes clusters without root privileges. All images are provided without warranty of any kind.
 
-Some parameters in the Nextcloud configuration will be overwritten by the file in `root/opt/nextcloud/config/docker.config.php`
-
-## Contribution
-
-This stuff is released under GPL. I'm happy about every pull-request, that makes this tool better.
+Please report any issues unrelated to containerization directly to the Nextcloud project. The code for the container configuration is provided under the terms of the [MIT License](LICENSE). Note that this license does not apply to the application code within the containers, which may be distributed under different, possibly more restrictive licenses. Users are responsible for complying with the licenses of the underlying applications.

@@ -51,8 +51,6 @@ fi
 
 # Check if config exists
 if [ ! -f /data/config/config.php ]; then
-  mkdir /data/config
-
   # Allow installation
   touch /data/config/CAN_INSTALL
 
