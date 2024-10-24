@@ -7,7 +7,7 @@ FROM php:${PHP_VERSION}-fpm-${DEBIAN_VERSION}
 # renovate: datasource=github-releases depName=aptible/supercronic versioning=semver
 ARG SUPERCRONIC_VERSION="v0.2.33"
 # renovate: datasource=github-releases depName=mlocati/docker-php-extension-installer versioning=semver
-ARG INSTALL_PHP_EXTENSIONS_VERSION="2.6.0"
+ARG INSTALL_PHP_EXTENSIONS_VERSION="2.6.1"
 
 # sha1sums
 ARG SUPERCRONIC_AMD64_SHA1SUM=71b0d58cc53f6bd72cf2f293e09e294b79c666d8
