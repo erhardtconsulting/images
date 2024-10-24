@@ -1,4 +1,4 @@
-FROM ghcr.io/erhardtconsulting/base-php:8.3.12@sha256:07adcf41d2bc383b7d211e202c79273c1c263e21688c0821c52b5714e64fc656
+FROM ghcr.io/erhardtconsulting/base-php:8.3.12@sha256:36fe5fc5a897be769932e59ee9d493e8d004a25fa9b4ca01739a3b9fc9066e15
 
 # Nextcloud gpg key for verification
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -12,37 +12,9 @@ RUN set -eux; \
     apt-get update; \
     apt-get -y install \
       gettext \
-      gnupg \
-      libfreetype6 \
-      libfreetype6-dev \
-      libgmp-dev \
-      libgmp10 \
-      libicu-dev \
-      libicu72 \
-      libjpeg62-turbo \
-      libjpeg62-turbo-dev \
-      libldap-2.5-0 \
-      libldap-dev \
-      libmagickwand-6.q16-6 \
-      libmagickwand-6.q16-dev \
-      libmcrypt-dev \
-      libmcrypt4 \
-      libmemcached-dev \
-      libmemcached11 \
-      libonig-dev \
-      libonig5 \
-      libpng-dev \
-      libpng16-16 \
-      libpq-dev \
-      libpq5 \
-      libzip-dev \
-      libzip4 \
-      zlib1g \
-      zlib1g-dev; \
-    docker-php-ext-configure gd --with-freetype=/usr --with-jpeg=/usr; \
-    docker-php-ext-configure ldap; \
-    docker-php-ext-configure zip; \
-    docker-php-ext-install -j "$(nproc)" \
+      gnupg; \
+    /usr/local/bin/install-php-extensions \
+      apcu \
       bcmath \
       exif \
       gd \
@@ -50,45 +22,39 @@ RUN set -eux; \
       intl \
       ldap \
       mbstring \
+      mcrypt \
+      memcached \
       mysqli \
       opcache \
       pcntl \
       pdo_mysql \
       pdo_pgsql \
       pgsql \
+      redis \
       sysvsem \
       zip; \
-    pecl channel-update pecl.php.net; \
-    pecl install APCu-5.1.24; \
-    # && pecl install imagick-3.7.0
     # >>> Fix for php8.3 - https://gist.github.com/Wirone/d5c794b4fef0203146a27687e80588a6#file-workaround-dockerfile
+    apt-get update;\
+    apt-get -y install \
+      libmagickwand-6.q16-6 \
+      libmagickwand-6.q16-dev \
+      libpng-dev \
+      libpng16-16 \
+      librsvg2-2 \
+      librsvg2-dev; \
     curl -fLo /tmp/imagick.tar.gz https://github.com/Imagick/imagick/archive/refs/tags/${IMAGICK_VERSION}.tar.gz; \
     tar --strip-components=1 -xf /tmp/imagick.tar.gz; \
     phpize; \
     ./configure; \
     make; \
     make install; \
-    #echo "extension=imagick.so" > /usr/local/etc/php/conf.d/ext-imagick.ini; \
     rm -rf /tmp/*; \
-    # <<< End of Imagick installation
-    pecl install mcrypt-1.0.7; \
-    pecl install memcached-3.3.0; \
-    pecl install redis-6.1.0; \
-    docker-php-ext-enable apcu imagick mcrypt memcached redis; \
     apt-get -y remove \
-      libfreetype6-dev \
-      libgmp-dev \
-      libicu-dev \
-      libjpeg62-turbo-dev \
-      libldap-dev \
       libmagickwand-6.q16-dev \
-      libmcrypt-dev \
-      libmemcached-dev \
-      libonig-dev \
       libpng-dev \
-      libpq-dev \
-      libzip-dev \
-      zlib1g-dev; \
+      librsvg2-dev; \
+    # <<< End of Imagick installation
+    docker-php-ext-enable apcu imagick mcrypt memcached redis; \
     apt-get -y autoremove; \
     apt-get clean; \
     # Enable PHP production settings
