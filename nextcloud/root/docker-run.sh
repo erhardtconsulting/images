@@ -49,6 +49,10 @@ if [ "$ENABLE_CONFIG_SWIFT" = "true" ]; then
   cp /opt/nextcloud.install/swift.config.php /data/config/
 fi
 
+if [ -f /data/config/config.php ] && [ "$ENABLE_CONFIG_AUTOCONFIG" = "true" ]; then
+  echo "⚠️ ENABLE_CONFIG_AUTOCONFIG should be removed on an already configured instance!"
+fi
+
 # Check if config exists
 if [ ! -f /data/config/config.php ]; then
   # Allow installation
@@ -66,10 +70,6 @@ if [ ! -f /data/config/config.php ]; then
 else
   # run database upgrade
   /usr/local/bin/occ upgrade
-fi
-
-if [ -f /data/config/config.php ] && [ "$ENABLE_CONFIG_AUTOCONFIG" = "true" ]; then
-  echo "⚠️ ENABLE_CONFIG_AUTOCONFIG should be removed on an already configured instance!"
 fi
 
 # Run supervisord
