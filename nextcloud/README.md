@@ -17,7 +17,7 @@ Security is a critical concern in containerized environments. Running containers
 
 ## Features
 
-* Uses latest stable version of **[Alpine Linux](https://alpinelinux.org)**, bundled with **[PHP 8](https://php.net)** and **[Nginx](https://nginx.org)**.
+* Debian container, bundled with **[PHP 8](https://php.net)** and **[Nginx](https://nginx.org)**.
 * GPG check during building process.
 * APCu already configured.
 * Cron runs all 15 mins (Can be disabled).
