@@ -3,5 +3,17 @@
   "extends": [
     "github>erhardtconsulting/renovate-rules:default",
     "github>erhardtconsulting/images//freshrss/renovate"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["base-php/Dockerfile"],
+      "matchStrings": [
+        "ARG PHP_VERSION=\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "php",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver",
+      "extractVersionTemplate": "^(?<version>[0-9.]+)-fpm-bookworm$"
+    }
   ]
 }

@@ -1,4 +1,4 @@
-name: "Nextcloud: Build & Publish Docker Image / Pull request"
+name: "Nextcloud: Build Docker Image / Pull Request"
 
 on:
   pull_request:
