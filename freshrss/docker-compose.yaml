@@ -1,6 +1,6 @@
 services:
   freshrss:
-    image: ghcr.io/erhardtconsulting/freshrss
+    image: quay.io/erhardtconsulting/freshrss
     read_only: true
     build:
       context: .

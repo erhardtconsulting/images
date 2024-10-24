@@ -34,7 +34,7 @@ Security is a critical concern in containerized environments. Running containers
 ```bash
 podman create volume nextcloud_data
 
-podman run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 erhardtconsulting/nextcloud
+podman run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 quay.io/erhardtconsulting/nextcloud
 ```
 
 **Run with docker**
@@ -42,7 +42,7 @@ podman run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 erhardtco
 ```bash
 docker create volume nextcloud_data
 
-docker run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 erhardtconsulting/nextcloud
+docker run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 quay.io/erhardtconsulting/nextcloud
 ```
 
 ### Environment Variables
