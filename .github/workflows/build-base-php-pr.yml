@@ -6,11 +6,9 @@ on:
       - main
     paths:
       - 'base-php/**'
-  workflow_dispatch:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   build-and-push:
