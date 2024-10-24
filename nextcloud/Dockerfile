@@ -36,12 +36,12 @@ RUN set -eux; \
     # >>> Fix for php8.3 - https://gist.github.com/Wirone/d5c794b4fef0203146a27687e80588a6#file-workaround-dockerfile
     apt-get update;\
     apt-get -y install \
+      libmagickcore-6.q16-6-extra \
+      libmagickcore-6.q16-dev \
       libmagickwand-6.q16-6 \
       libmagickwand-6.q16-dev \
       libpng-dev \
-      libpng16-16 \
-      librsvg2-2 \
-      librsvg2-dev; \
+      libpng16-16; \
     curl -fLo /tmp/imagick.tar.gz https://github.com/Imagick/imagick/archive/refs/tags/${IMAGICK_VERSION}.tar.gz; \
     tar --strip-components=1 -xf /tmp/imagick.tar.gz; \
     phpize; \
@@ -50,9 +50,9 @@ RUN set -eux; \
     make install; \
     rm -rf /tmp/*; \
     apt-get -y remove \
+      libmagickcore-6.q16-dev \
       libmagickwand-6.q16-dev \
-      libpng-dev \
-      librsvg2-dev; \
+      libpng-dev; \
     # <<< End of Imagick installation
     docker-php-ext-enable apcu imagick mcrypt memcached redis; \
     apt-get -y autoremove; \
