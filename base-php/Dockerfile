@@ -1,5 +1,5 @@
 # set php and debian version
-ARG PHP_VERSION="8.3.12"
+ARG PHP_VERSION="8.3.13"
 ARG DEBIAN_VERSION="bookworm"
 
 FROM php:${PHP_VERSION}-fpm-${DEBIAN_VERSION}
