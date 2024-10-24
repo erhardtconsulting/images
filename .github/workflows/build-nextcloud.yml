@@ -79,3 +79,18 @@ jobs:
             --tag docker.io/rootlogin/${{ env.IMAGE_NAME }}:latest \
             ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
             ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest
+
+      - name: Log in to Quay.io (as rootlogin)
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        with:
+          registry: quay.io
+          username: rootlogin+github
+          password: ${{ secrets.QUAYIO_ROOTLOGIN_TOKEN }}
+
+      - name: Push image to Quay.io (as rootlogin)
+        run: |
+          docker buildx imagetools create \
+            --tag quay.io/rootlogin/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
+            --tag quay.io/rootlogin/${{ env.IMAGE_NAME }}:latest \
+            ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }} \
+            ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:latest
