@@ -4,9 +4,12 @@
     "github>erhardtconsulting/renovate-rules:default",
     "github>erhardtconsulting/images//freshrss/renovate"
   ],
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["base-php/Dockerfile"],
+      "customType": "regex",
+      "fileMatch": [
+        "base-php/Dockerfile"
+      ],
       "matchStrings": [
         "ARG PHP_VERSION=\"(?<currentValue>[^\"]+)\""
       ],
