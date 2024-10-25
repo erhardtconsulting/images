@@ -1,8 +1,4 @@
-# set php and debian version
-ARG PHP_VERSION="8.3.12"
-ARG DEBIAN_VERSION="bookworm"
-
-FROM docker.io/library/php:${PHP_VERSION}-fpm-${DEBIAN_VERSION}
+FROM docker.io/library/php:8.3.12-fpm@sha256:a3b7b7770e610385103740c765a3ad7fdf7f0168e12eb6b1c9279aadfca9f96b
 
 # renovate: datasource=github-releases depName=aptible/supercronic versioning=semver
 ARG SUPERCRONIC_VERSION="v0.2.33"

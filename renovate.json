@@ -1,8 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "github>erhardtconsulting/renovate-rules:default",
-    "github>erhardtconsulting/renovate-rules:automerge-docker-erhardtconsulting"
+    "github>erhardtconsulting/renovate-rules:default"
   ],
   "customManagers": [
     {
@@ -11,12 +10,12 @@
         "base-php/Dockerfile"
       ],
       "matchStrings": [
-        "ARG PHP_VERSION=\"(?<currentValue>[^\"]+)\""
+        "FROM docker.io/library/php:(?<currentValue>[0-9.]+-fpm)@sha256:(?<digest>[a-f0-9]{64})"
       ],
       "depNameTemplate": "php",
       "datasourceTemplate": "docker",
       "versioningTemplate": "semver",
-      "extractVersionTemplate": "^(?<version>[0-9.]+)-fpm-bookworm$"
+      "extractVersionTemplate": "^(?<version>[0-9.]+)-fpm$"
     }
   ],
   "packageRules": [
@@ -24,8 +23,19 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["docker.io/library/alpine"],
       "matchUpdateTypes": ["digest"],
-      "automerge": true,
-      "ignoreTests": true
+      "automerge": true
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/library/php"],
+      "matchUpdateTypes": ["patch","digest"],
+      "automerge": true
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/erhardtconsulting/*"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true
     }
   ]
 }
