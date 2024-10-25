@@ -47,14 +47,24 @@ docker run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 quay.io/e
 
 ### Environment Variables
 
-| Environment variable                      | Default | Description                                                                |
-|-------------------------------------------|---------|----------------------------------------------------------------------------|
-| PHP_APCU_SHM_SIZE                         | 128M    | Size of each shared memory segment of APCu                                 |
-| PHP_MAX_EXECUTION_TIME                    | 600     | Maximum time a php script is allowed to run                                |
-| PHP_MEMORY_LIMIT                          | 512M    | Sets the maximum amount of memory that a php script is allowed to allocate |
-| ENABLE_CONFIG_DOCKER                      | true    | Enables recommended config for containers (docker.config.php)              |
-| ENABLE_CONFIG_DISABLE_SKELETONS_TEMPLATES | false   | Disable skeletons and templates directories                                |
-| ENABLE_CRON                               | true    | Enables or disables the integrated supercronic service                     |
+| Environment variable                      | Default | Description                                                                                                                                |
+|-------------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| NGINX_WORKER_PROCESSES                    | auto    | Sets Nginx [worker_processes](https://nginx.org/en/docs/ngx_core_module.html#worker_processes)                                             |
+| NGINX_WORKER_CONNECTIONS                  | 1024    | Sets Nginx [worker_connections](https://nginx.org/en/docs/ngx_core_module.html#worker_connections)                                         |
+| NGINX_CLIENT_MAX_BODY_SIZE                | 1G      | Sets Nginx [client_max_body_size](http://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size)                            |
+| NGINX_CLIENT_BODY_TIMEOUT                 | 600     | Sets Nginx [client_body_timeout](http://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_timeout)                              |
+| NGINX_CLIENT_BODY_BUFFER_SIZE             | 512k    | Sets Nginx [client_body_buffer_size](http://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_buffer_size)                      |
+| NGINX_FASTCGI_READ_TIMEOUT                | "600    | Sets Nginx [fastcgi_read_timeout](https://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_read_timeout)                        |
+| PHP_APCU_SHM_SIZE                         | 128M    | Sets PHP [apcu.shm-size](https://www.php.net/manual/en/apcu.configuration.php#ini.apcu.shm-size)                                           |
+| PHP_MAX_INPUT_TIME                        | -1      | Sets PHP [max_input_time](https://www.php.net/manual/en/info.configuration.php#ini.max-input-time)                                         |
+| PHP_MAX_EXECUTION_TIME                    | 600     | Sets PHP [max_execution_time](https://www.php.net/manual/en/info.configuration.php#ini.max-execution-time)                                 |
+| PHP_MEMORY_LIMIT                          | 512M    | Sets PHP [memory_limit](https://www.php.net/manual/de/ini.core.php#ini.memory-limit)                                                       |
+| PHP_POST_MAX_SIZE                         | 1G      | Sets PHP [post_max_size](https://www.php.net/manual/en/ini.core.php#ini.post-max-size), should not be smaller than PHP_UPLOAD_MAX_FILESIZE |
+| PHP_UPLOAD_MAX_FILESIZE                   | 1G      | Sets PHP [upload-max-filesize](https://www.php.net/manual/en/ini.core.php#ini.upload-max-filesize)                                         |
+| PHP_OPCACHE_REVALIDATE_FREQ               | 2       | Sets PHP [opcache.revalidate-freq](https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.revalidate-freq)                    |
+| ENABLE_CONFIG_DOCKER                      | true    | Enables recommended config for containers (docker.config.php)                                                                              |
+| ENABLE_CONFIG_DISABLE_SKELETONS_TEMPLATES | false   | Disable skeletons and templates directories                                                                                                |
+| ENABLE_CRON                               | true    | Enables or disables the integrated supercronic service                                                                                     |
 
 **Redis configuration**
 

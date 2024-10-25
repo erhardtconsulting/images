@@ -20,10 +20,11 @@ fi
 echo "Preparing environment..."
 
 # Make sure additional directories exist
-mkdir -p /data/config /data/data /data/tmp /data/userapps /tmp/sessions
+mkdir -p /data/config /data/data /data/tmp /data/userapps /tmp/sessions /tmp/config
 
 # Build nextcloud php config
-envsubst < /opt/nextcloud.install/nextcloud.ini > /data/php.nextcloud.ini
+envsubst < /opt/nextcloud.install/nextcloud.ini > /tmp/config/php.nextcloud.ini
+envsubst '$NGINX_WORKER_PROCESSES $NGINX_WORKER_CONNECTIONS $NGINX_CLIENT_MAX_BODY_SIZE $NGINX_CLIENT_BODY_TIMEOUT $NGINX_CLIENT_BODY_BUFFER_SIZE $NGINX_FASTCGI_READ_TIMEOUT' < /opt/nextcloud.install/nginx.conf > /tmp/config/nginx.conf
 
 if [ "$ENABLE_CONFIG_DOCKER" = "true" ]; then
   cp /opt/nextcloud.install/docker.config.php /data/config/

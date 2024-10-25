@@ -91,7 +91,8 @@ RUN set -eux; \
     ln -sf /data/data /opt/nextcloud/data; \
     ln -sf /data/config /opt/nextcloud/config; \
     ln -sf /data/userapps /opt/nextcloud/userapps; \
-    ln -sf /data/php.nextcloud.ini "$PHP_INI_DIR/conf.d/nextcloud.ini"
+    ln -sf /tmp/config/php.nextcloud.ini "$PHP_INI_DIR/conf.d/nextcloud.ini"; \
+    ln -sf /tmp/config/nginx.conf /etc/nginx/nginx-nextcloud.conf
 
 # Copy config
 COPY root /
@@ -118,11 +119,21 @@ ENV ENABLE_CONFIG_AUTOCONFIG="false" \
     ENABLE_CONFIG_SWIFT="false" \
     ENABLE_CONFIG_DISABLE_SKELETONS_TEMPLATES="false" \
     ENABLE_CRON="true" \
+    NGINX_WORKER_PROCESSES="auto" \
+    NGINX_WORKER_CONNECTIONS="1024" \
+    NGINX_CLIENT_MAX_BODY_SIZE="1G" \
+    NGINX_CLIENT_BODY_TIMEOUT="600" \
+    NGINX_CLIENT_BODY_BUFFER_SIZE="512k" \
+    NGINX_FASTCGI_READ_TIMEOUT="600" \
     PHP_APCU_SHM_SIZE="128M" \
+    PHP_MAX_INPUT_TIME="-1" \
     PHP_MAX_EXECUTION_TIME="600" \
-    PHP_MEMORY_LIMIT="512M"
+    PHP_MEMORY_LIMIT="512M" \
+    PHP_POST_MAX_SIZE="1G" \
+    PHP_UPLOAD_MAX_FILESIZE="1G" \
+    PHP_OPCACHE_REVALIDATE_FREQ="2"
 
-LABEL org.opencontainers.image.description="Rootless all-in-one Nextcloud image, based on Alpine Linux" \
+LABEL org.opencontainers.image.description="Rootless all-in-one Nextcloud image" \
       org.opencontainers.image.version="${NEXTCLOUD_VERSION}" \
       org.opencontainers.image.authors="Simon Erhardt <simon@erhardt.consulting>" \
       org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
