@@ -49,6 +49,10 @@ if [ "$ENABLE_CONFIG_SWIFT" = "true" ]; then
   cp /opt/nextcloud.install/swift.config.php /data/config/
 fi
 
+if [ "$ENABLE_CONFIG_DISABLE_SKELETONS_TEMPLATES" = "true" ]; then
+  cp /opt/nextcloud.install/disable-skeletons-templates.config.php /data/config/
+fi
+
 if [ -f /data/config/config.php ] && [ "$ENABLE_CONFIG_AUTOCONFIG" = "true" ]; then
   echo "⚠️ ENABLE_CONFIG_AUTOCONFIG should be removed on an already configured instance!"
 fi

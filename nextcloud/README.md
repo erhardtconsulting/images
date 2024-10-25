@@ -47,13 +47,14 @@ docker run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 quay.io/e
 
 ### Environment Variables
 
-| Environment variable   | Default | Description                                                                |
-|------------------------|---------|----------------------------------------------------------------------------|
-| PHP_APCU_SHM_SIZE      | 128M    | Size of each shared memory segment of APCu                                 |
-| PHP_MAX_EXECUTION_TIME | 600     | Maximum time a php script is allowed to run                                |
-| PHP_MEMORY_LIMIT       | 512M    | Sets the maximum amount of memory that a php script is allowed to allocate |
-| ENABLE_CONFIG_DOCKER   | true    | Enables recommended config for containers (docker.config.php)              |
-| ENABLE_CRON            | true    | Enables or disables the integrated supercronic service                     |
+| Environment variable                      | Default | Description                                                                |
+|-------------------------------------------|---------|----------------------------------------------------------------------------|
+| PHP_APCU_SHM_SIZE                         | 128M    | Size of each shared memory segment of APCu                                 |
+| PHP_MAX_EXECUTION_TIME                    | 600     | Maximum time a php script is allowed to run                                |
+| PHP_MEMORY_LIMIT                          | 512M    | Sets the maximum amount of memory that a php script is allowed to allocate |
+| ENABLE_CONFIG_DOCKER                      | true    | Enables recommended config for containers (docker.config.php)              |
+| ENABLE_CONFIG_DISABLE_SKELETONS_TEMPLATES | false   | Disable skeletons and templates directories                                |
+| ENABLE_CRON                               | true    | Enables or disables the integrated supercronic service                     |
 
 **Redis configuration**
 
