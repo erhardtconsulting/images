@@ -18,5 +18,14 @@
       "versioningTemplate": "semver",
       "extractVersionTemplate": "^(?<version>[0-9.]+)-fpm-bookworm$"
     }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/library/alpine"],
+      "matchUpdateTypes": ["digest"],
+      "automerge": true,
+      "ignoreTests": true
+    }
   ]
 }

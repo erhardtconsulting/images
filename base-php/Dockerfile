@@ -2,7 +2,7 @@
 ARG PHP_VERSION="8.3.12"
 ARG DEBIAN_VERSION="bookworm"
 
-FROM php:${PHP_VERSION}-fpm-${DEBIAN_VERSION}
+FROM docker.io/library/php:${PHP_VERSION}-fpm-${DEBIAN_VERSION}
 
 # renovate: datasource=github-releases depName=aptible/supercronic versioning=semver
 ARG SUPERCRONIC_VERSION="v0.2.33"
