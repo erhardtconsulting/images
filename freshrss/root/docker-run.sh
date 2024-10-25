@@ -7,10 +7,10 @@ if [ ! -w "/tmp" ]; then
   exit 255
 fi
 
-# Check if /opt/freshrss/data is writeable
-if [ ! -w "/opt/freshrss/data" ]; then
-  echo "⛔ Directory '/opt/freshrss/data' is not writeable by the user. Aborting!"
-  echo "Directory Info: $(ls -lhd /opt/freshrss/data)"
+# Check if /data is writeable
+if [ ! -w "/data" ]; then
+  echo "⛔ Directory '/data' is not writeable by the user. Aborting!"
+  echo "Directory Info: $(ls -lhd /data)"
   exit 255
 fi
 

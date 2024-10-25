@@ -5,7 +5,7 @@ services:
     build:
       context: .
     container_name: freshrss
-    user: "2000:2000"
+    user: "65534:65534"
     environment:
       - TZ=Europe/Zurich
     volumes:
@@ -13,7 +13,7 @@ services:
     ports:
       - "8080:8080"
     tmpfs:
-      - /tmp:uid=2000,gid=2000,mode=0755
+      - /tmp:uid=65534,gid=65534,mode=0755
 
 volumes:
   freshrss_data:

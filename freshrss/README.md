@@ -37,7 +37,7 @@ This container uses the user "freshrss" with UID 2000 and GID 2000 for running a
 
 **Necessary Volumes:**
 
-- **Data Volume**: `/opt/freshrss/data` \
+- **Data Volume**: `/data` \
   This volume is used for storing the data and caches of FreshRSS. It has to be writeable by the user.
 - **Temporary Volume**: `/tmp` \
   This volume is used for storing process and session data. It has to be writeable by the user.
@@ -64,8 +64,8 @@ Please use the installation assistant provided by FreshRSS for setup.
 
 You can override the configuration using config maps by mounting them to:
 
-- `/opt/freshrss/data/config.custom.php`
-- `/opt/freshrss/data/config-user.custom.php`
+- `/data/config.custom.php`
+- `/data/config-user.custom.php`
 
 ## Usage Examples
 
@@ -94,13 +94,13 @@ spec:
         fsGroup: 2000
       containers:
         - name: freshrss
-          image: ghcr.io/erhardtconsulting/freshrss
+          image: quay.io/erhardtconsulting/freshrss
           env:
             - name: TZ
               value: "Europe/Zurich"
           volumeMounts:
             - name: data
-              mountPath: /opt/freshrss/data
+              mountPath: /data
             - name: tmp-tmpfs
               mountPath: /tmp
       volumes:
