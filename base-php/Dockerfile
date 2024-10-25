@@ -9,15 +9,18 @@ ARG SUPERCRONIC_VERSION="v0.2.33"
 # renovate: datasource=github-releases depName=mlocati/docker-php-extension-installer versioning=semver
 ARG INSTALL_PHP_EXTENSIONS_VERSION="2.6.0"
 
-# sha1sums
-ARG SUPERCRONIC_AMD64_SHA1SUM=71b0d58cc53f6bd72cf2f293e09e294b79c666d8
-ARG SUPERCRONIC_386_SHA1SUM=37c4c0b42c4b00be123d2f9736754bcf0659ae4e
-ARG SUPERCRONIC_ARM_SHA1SUM=0d3e3da1eeceaa34991d44b48aecfcbb9d9fba5a
-ARG SUPERCRONIC_ARM64_SHA1SUM=e0f0c06ebc5627e43b25475711e694450489ab00
-ARG INSTALL_PHP_EXTENSIONS_SHA1SUM=32d4b2cd2a5008d57d038670356121bc476f814b
-
 # build variables
 ARG TARGETARCH
+
+# install supercronic
+ADD --chmod=0755 \
+    "https://github.com/aptible/supercronic/releases/download/${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH}" \
+    "/usr/local/bin/supercronic"
+
+# install install-php-extensions
+ADD --chmod=0755 \
+    "https://github.com/mlocati/docker-php-extension-installer/releases/download/${INSTALL_PHP_EXTENSIONS_VERSION}/install-php-extensions" \
+    "/usr/local/bin/install-php-extensions"
 
 # install dependencies
 RUN set -eux; \
@@ -26,19 +29,7 @@ RUN set -eux; \
       nginx \
       supervisor \
       tini; \
-    apt-get clean; \
-    curl -fLo "/usr/local/bin/supercronic" "https://github.com/aptible/supercronic/releases/download/${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH}"; \
-    chmod +x "/usr/local/bin/supercronic"; \
-    [ "$TARGETARCH" = "amd64" ] && SUPERCRONIC_SHA1SUM="$SUPERCRONIC_AMD64_SHA1SUM"; \
-    [ "$TARGETARCH" = "386" ] && SUPERCRONIC_SHA1SUM="$SUPERCRONIC_386_SHA1SUM"; \
-    [ "$TARGETARCH" = "arm" ] && SUPERCRONIC_SHA1SUM="$SUPERCRONIC_ARM_SHA1SUM"; \
-    [ "$TARGETARCH" = "arm64" ] && SUPERCRONIC_SHA1SUM="$SUPERCRONIC_ARM64_SHA1SUM"; \
-    CHECKSUM_STAGE=$(echo -n $(echo "${SUPERCRONIC_SHA1SUM}  /usr/local/bin/supercronic" | sha1sum -c -) | tail -c 2); \
-    if [ "${CHECKSUM_STAGE}" != "OK" ]; then echo "Warning! Checksum does not match!" && exit 1; fi; \
-    curl -fLo "/usr/local/bin/install-php-extensions" "https://github.com/mlocati/docker-php-extension-installer/releases/download/${INSTALL_PHP_EXTENSIONS_VERSION}/install-php-extensions"; \
-    chmod +x "/usr/local/bin/install-php-extensions"; \
-    CHECKSUM_STAGE=$(echo -n $(echo "${INSTALL_PHP_EXTENSIONS_SHA1SUM}  /usr/local/bin/install-php-extensions" | sha1sum -c -) | tail -c 2); \
-    if [ "${CHECKSUM_STAGE}" != "OK" ]; then echo "Warning! Checksum does not match!" && exit 1; fi
+    apt-get clean
 
 LABEL org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
 LABEL org.opencontainers.image.description="Rootless PHP base image"

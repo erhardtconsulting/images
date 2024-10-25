@@ -1,4 +1,9 @@
-all: build-nextcloud
+.PHONY: all nextcloud base-php
 
-build-nextcloud:
+all: nextcloud
+
+base-php:
+	podman build --file base-php/Dockerfile -t erhardtconsulting/base-php base-php
+
+nextcloud:
 	podman build --file nextcloud/Dockerfile -t erhardtconsulting/nextcloud nextcloud
