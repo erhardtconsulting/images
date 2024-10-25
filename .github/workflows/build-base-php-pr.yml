@@ -1,7 +1,7 @@
 name: "PHP: Build Docker Image / Pull Request"
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
