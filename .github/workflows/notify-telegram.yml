@@ -1,0 +1,17 @@
+name: Renovate merge notification
+on:
+  push:
+    branches:
+      - main
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: github.actor == 'erhardt-consulting-bot'
+    steps:
+      - name: Send telegram notification
+        if: ${{ secrets.TELEGRAM_BOT_TOKEN && secrets.TELEGRAM_CHAT_ID }}
+        run: |-
+          curl -s -X POST \
+            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+            -d text="🤖 Renovate: **${{ github.repository }}**\n\n${{ github.event.head_commit.message }}\n\n${{ github.event.head_commit.url }}"
