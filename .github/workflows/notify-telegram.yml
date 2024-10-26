@@ -9,7 +9,6 @@ jobs:
     if: github.actor == 'erhardt-consulting-bot'
     steps:
       - name: Send telegram notification
-        if: ${{ secrets.TELEGRAM_BOT_TOKEN && secrets.TELEGRAM_CHAT_ID }}
         run: |-
           curl -s -X POST \
             https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
