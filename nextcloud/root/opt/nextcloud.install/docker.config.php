@@ -21,7 +21,7 @@ $CONFIG = array(
         ),
     ),
     'log_type' => 'file',
-    'logfile' => '/data/nextcloud.log',
+    'logfile' => '/data/logs/nextcloud.log',
     'loglevel' => 3,
     'logdateformat' => 'F d, Y H:i:s',
     'upgrade.disable-web' => true,

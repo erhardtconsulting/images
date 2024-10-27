@@ -20,7 +20,7 @@ fi
 echo "Preparing environment..."
 
 # Make sure additional directories exist
-mkdir -p /data/config /data/data /data/tmp /data/userapps /tmp/sessions /tmp/config
+mkdir -p /data/config /data/data /data/logs /data/tmp /data/userapps /tmp/sessions /tmp/config
 
 # Build nextcloud php config
 envsubst < /opt/nextcloud.install/nextcloud.ini > /tmp/config/php.nextcloud.ini
