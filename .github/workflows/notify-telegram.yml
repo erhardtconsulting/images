@@ -8,9 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor == 'erhardt-consulting-bot'
     steps:
-      - name: Send telegram notification
+      - name: Send pushover notification
         run: |-
-          curl -s -X POST \
-            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
-            -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
-            -d text="🤖 Renovate: **${{ github.repository }}**\n\n${{ github.event.head_commit.message }}\n\n${{ github.event.head_commit.url }}"
+          curl -s \
+            --form-string "token=${{ secrets.PUSHOVER_API_TOKEN }}" \
+            --form-string "user=${{ secrets.PUSHOVER_USER_KEY }}" \
+            --form-string "title=Renovate Update" \
+            --form-string "html=1" \
+            --form-string "message=<b>${{ github.repository }}</b><br><br>${{ github.event.head_commit.message }}<br><a href='${{ github.event.head_commit.url }}'>Open Commit</a>" \
+            https://api.pushover.net/1/messages.json
