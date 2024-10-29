@@ -1,4 +1,4 @@
-FROM docker.io/library/php:8.3.13-fpm@sha256:2f89fe4dc408f05fed7cd298ea4c8802a5e6cb8e9fd882906ef04a9f074fd7de
+FROM docker.io/library/php:8.3.13-fpm@sha256:dd5ae053b1d4d3b876b421ada919283f1302440f9ab582fdae19bbb23238002f
 
 # renovate: datasource=github-releases depName=aptible/supercronic versioning=semver
 ARG SUPERCRONIC_VERSION="v0.2.33"
