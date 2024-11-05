@@ -7,7 +7,7 @@ ARG SOPS_VERSION="v3.9.1"
 ARG NVM_VERSION="v0.40.1"
 
 # renovate: datasource=github-tags depName=nodejs/node versioning=semver
-ARG NODE_VERSION="v22.9.0"
+ARG NODE_VERSION="v22.11.0"
 
 ADD --chmod=0755 https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
 
