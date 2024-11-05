@@ -21,7 +21,10 @@
   "packageRules": [
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["docker.io/library/alpine"],
+      "matchPackageNames": [
+        "docker.io/library/alpine",
+        "docker.io/library/ubuntu"
+      ],
       "matchUpdateTypes": ["digest"],
       "automerge": true
     },
