@@ -19,6 +19,7 @@ RUN set -eux; \
       exif \
       gd \
       gmp \
+      igbinary \
       intl \
       ldap \
       mbstring \
@@ -131,7 +132,7 @@ ENV ENABLE_CONFIG_AUTOCONFIG="false" \
     PHP_MEMORY_LIMIT="512M" \
     PHP_POST_MAX_SIZE="1G" \
     PHP_UPLOAD_MAX_FILESIZE="1G" \
-    PHP_OPCACHE_REVALIDATE_FREQ="2"
+    PHP_OPCACHE_REVALIDATE_FREQ="60"
 
 LABEL org.opencontainers.image.description="Rootless all-in-one Nextcloud image" \
       org.opencontainers.image.version="${NEXTCLOUD_VERSION}" \

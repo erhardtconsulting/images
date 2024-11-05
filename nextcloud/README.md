@@ -61,7 +61,7 @@ docker run --volume nextcloud_data:/data --user 1234:1234 -p 8080:8080 quay.io/e
 | PHP_MEMORY_LIMIT                          | 512M    | Sets PHP [memory_limit](https://www.php.net/manual/de/ini.core.php#ini.memory-limit)                                                       |
 | PHP_POST_MAX_SIZE                         | 1G      | Sets PHP [post_max_size](https://www.php.net/manual/en/ini.core.php#ini.post-max-size), should not be smaller than PHP_UPLOAD_MAX_FILESIZE |
 | PHP_UPLOAD_MAX_FILESIZE                   | 1G      | Sets PHP [upload-max-filesize](https://www.php.net/manual/en/ini.core.php#ini.upload-max-filesize)                                         |
-| PHP_OPCACHE_REVALIDATE_FREQ               | 2       | Sets PHP [opcache.revalidate-freq](https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.revalidate-freq)                    |
+| PHP_OPCACHE_REVALIDATE_FREQ               | 60      | Sets PHP [opcache.revalidate-freq](https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.revalidate-freq)                    |
 | ENABLE_CONFIG_DOCKER                      | true    | Enables recommended config for containers (docker.config.php)                                                                              |
 | ENABLE_CONFIG_DISABLE_SKELETONS_TEMPLATES | false   | Disable skeletons and templates directories                                                                                                |
 | ENABLE_CRON                               | true    | Enables or disables the integrated supercronic service                                                                                     |
