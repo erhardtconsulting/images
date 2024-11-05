@@ -9,10 +9,14 @@ ARG NVM_VERSION="v0.40.1"
 # renovate: datasource=github-tags depName=nodejs/node versioning=semver
 ARG NODE_VERSION="v22.11.0"
 
+# renovate: datasource=github-releases depName=rclone/rclone versioning=semver
+ARG RCLONE_VERSION="v1.68.1"
+
 ADD --chmod=0755 https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
 
 RUN set -eux; \
     apt-get update; \
+    # install some software
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
       age \
       bash \
@@ -21,9 +25,10 @@ RUN set -eux; \
       curl \
       git \
       gnupg \
-      rclone \
+      unzip \
       wget; \
     apt-get clean; \
+    # install NodeJS
     # use pre-existing gpg directory, see https://github.com/nodejs/docker-node/pull/1895#issuecomment-1550389150
     export GNUPGHOME="$(mktemp -d)"; \
     # gpg keys listed at https://github.com/nodejs/node#release-keys
@@ -51,6 +56,13 @@ RUN set -eux; \
     ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
     # smoke tests
     node --version; \
-    npm --version
+    npm --version; \
+    # install rclone
+    curl -fsSLO "https://github.com/rclone/rclone/releases/download/${RCLONE_VERSION}/rclone-${RCLONE_VERSION}-linux-amd64.zip"; \
+    unzip "rclone-${RCLONE_VERSION}-linux-amd64.zip"; \
+    cp "rclone-${RCLONE_VERSION}-linux-amd64/rclone" /usr/local/bin/rclone; \
+    chmod +x /usr/local/bin/rclone; \
+    rm -rf "rclone-${RCLONE_VERSION}-linux-amd64"; \
+    rm "rclone-${RCLONE_VERSION}-linux-amd64.zip"
 
 CMD ["/bin/bash"]
