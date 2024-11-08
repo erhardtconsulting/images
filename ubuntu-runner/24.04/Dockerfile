@@ -12,6 +12,9 @@ ARG NODE_VERSION="v22.11.0"
 # renovate: datasource=github-releases depName=rclone/rclone versioning=semver
 ARG RCLONE_VERSION="v1.68.1"
 
+# renovate: datasource=github-releases depName=dotenvx/dotenvx versioning=semver
+ARG DOTENVX_VERSION="v1.22.0"
+
 ADD --chmod=0755 https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
 
 RUN set -eux; \
@@ -63,6 +66,11 @@ RUN set -eux; \
     cp "rclone-${RCLONE_VERSION}-linux-amd64/rclone" /usr/local/bin/rclone; \
     chmod +x /usr/local/bin/rclone; \
     rm -rf "rclone-${RCLONE_VERSION}-linux-amd64"; \
-    rm "rclone-${RCLONE_VERSION}-linux-amd64.zip"
+    rm "rclone-${RCLONE_VERSION}-linux-amd64.zip"; \
+    # install dotenvx
+    DOTENVX_VERSION_STRIPPED="${DOTENVX_VERSION#v}"; \
+    curl -fsSLO "https://github.com/dotenvx/dotenvx/releases/download/${DOTENVX_VERSION}/dotenvx-${DOTENVX_VERSION_STRIPPED}-linux-amd64.tar.gz"; \
+    tar -xzf "dotenvx-${DOTENVX_VERSION_STRIPPED}-linux-amd64.tar.gz" -C /usr/local/bin; \
+    rm "dotenvx-${DOTENVX_VERSION_STRIPPED}-linux-amd64.tar.gz"
 
 CMD ["/bin/bash"]
