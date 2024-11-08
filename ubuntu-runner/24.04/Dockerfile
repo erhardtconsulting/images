@@ -26,7 +26,7 @@ RUN set -eux; \
       build-essential \
       ca-certificates \
       curl \
-      docker \
+      docker.io \
       git \
       gnupg \
       podman \
