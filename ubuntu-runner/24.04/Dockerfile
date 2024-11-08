@@ -28,6 +28,7 @@ RUN set -eux; \
       curl \
       git \
       gnupg \
+      podman \
       unzip \
       wget; \
     apt-get clean; \
