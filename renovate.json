@@ -39,6 +39,12 @@
       "matchPackageNames": ["ghcr.io/erhardtconsulting/*"],
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
+    },
+    {
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["nextcloud/server"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     }
   ]
 }
