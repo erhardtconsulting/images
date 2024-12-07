@@ -23,4 +23,5 @@ jobs:
       dockerfile: "pg16.Dockerfile"
       tag: "16"
       push: true
+      latest: true
     secrets: inherit
