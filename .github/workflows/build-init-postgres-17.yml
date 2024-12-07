@@ -17,7 +17,7 @@ permissions:
 jobs:
   call-build-workflow:
     name: Build & Push Base
-    uses: ./build-container.yml
+    uses: ./build-container.yml@main
     with:
       image: "init-postgres"
       dockerfile: "pg17.Dockerfile"
