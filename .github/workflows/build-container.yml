@@ -147,7 +147,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: redhat-actions/podman-login@v1
         with:
-          registry: quay.io/erhardtconsulting
+          registry: docker.io/erhardtconsulting
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
