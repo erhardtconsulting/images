@@ -1,0 +1,25 @@
+name: "Init-Postgres 17: Build Container Image / Pull Request"
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'init-postgres/pg17.Dockerfile'
+      - 'init-postgres/root/**'
+      - '.github/workflows/build-container.yml'
+      - '.github/workflows/build-init-postgres-17-pr.yml'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  call-build-workflow:
+    name: Build
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    with:
+      image: "init-postgres"
+      dockerfile: "pg17.Dockerfile"
+      version: "17"
+      push: false

@@ -6,6 +6,9 @@ on:
       image:
         required: true
         type: string
+      dockerfile:
+        default: Dockerfile
+        type: string
       version:
         required: true
         type: string
@@ -49,14 +52,16 @@ jobs:
           echo "PLATFORM=${PLATFORM}" >> ${GITHUB_ENV}
           [ "${PLATFORM}" = "amd64" ] && echo "PODMAN_ARCH=linux/amd64" >> ${GITHUB_ENV} || true
           [ "${PLATFORM}" = "arm64" ] && echo "PODMAN_ARCH=linux/arm64/v8" >> ${GITHUB_ENV} || true
+          echo "DOCKERFILE=${DOCKERFILE}"
         env:
           PLATFORM: ${{ matrix.platform }}
           IMAGE: ${{ inputs.image }}
+          DOCKERFILE: ${{ inputs.dockerfile }}
 
       # Build image
       - name: Build image with podman
         run: |
-          podman build --platform "${{ env.PODMAN_ARCH }}" -f "${{ env.IMAGE }}/Dockerfile" -t "ghcr.io/erhardtconsulting/${{ env.IMAGE }}:build-${{ env.PLATFORM }}" "${{ env.IMAGE }}/"
+          podman build --platform "${{ env.PODMAN_ARCH }}" -f "${{ env.IMAGE }}/${{ env.Dockerfile }}" -t "ghcr.io/erhardtconsulting/${{ env.IMAGE }}:build-${{ env.PLATFORM }}" "${{ env.IMAGE }}/"
 
       # Create tar from container
       - name: Put container to oci
@@ -82,6 +87,7 @@ jobs:
         run: |
           echo "IMAGE=${IMAGE}" >> ${GITHUB_ENV}
           echo "VERSION=${VERSION}" >> ${GITHUB_ENV}
+          echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         env:
           IMAGE: ${{ inputs.image }}
           VERSION: ${{ inputs.version }}
@@ -103,15 +109,15 @@ jobs:
           podman manifest create ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest
           podman manifest add ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest oci-archive:/tmp/arm64-oci.tar
           podman manifest add ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest oci-archive:/tmp/amd64-oci.tar
-          podman tag ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest ghcr.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }} ghcr.io/erhardtconsulting/${{ env.IMAGE }}:latest 
-          podman tag ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest quay.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }} quay.io/erhardtconsulting/${{ env.IMAGE }}:latest
-          podman tag ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest docker.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }} docker.io/erhardtconsulting/${{ env.IMAGE }}:latest
+          podman tag ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest ghcr.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }} ghcr.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }}-${{ env.DATE }} ghcr.io/erhardtconsulting/${{ env.IMAGE }}:latest 
+          podman tag ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest quay.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }} quay.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }}-${{ env.DATE }} quay.io/erhardtconsulting/${{ env.IMAGE }}:latest
+          podman tag ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest docker.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }} docker.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }}-${{ env.DATE }} docker.io/erhardtconsulting/${{ env.IMAGE }}:latest
 
       - name: Push image to ghcr
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
           image: ${{ env.IMAGE }}
-          tags: ${{ env.VERSION }} latest
+          tags: ${{ env.VERSION }} ${{ env.VERSION }}-${{ env.DATE }} latest
           username: ${{ github.actor }}
           password: ${{ github.token }}
           registry: ghcr.io/erhardtconsulting
@@ -120,7 +126,7 @@ jobs:
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
           image: ${{ env.IMAGE }}
-          tags: ${{ env.VERSION }} latest
+          tags: ${{ env.VERSION }} ${{ env.VERSION }}-${{ env.DATE }} latest
           username: ${{ secrets.QUAYIO_USERNAME }}
           password: ${{ secrets.QUAYIO_TOKEN }}
           registry: quay.io/erhardtconsulting
@@ -129,7 +135,7 @@ jobs:
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
           image: ${{ env.IMAGE }}
-          tags: ${{ env.VERSION }} latest
+          tags: ${{ env.VERSION }} ${{ env.VERSION }}-${{ env.DATE }} latest
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           registry: docker.io/erhardtconsulting
