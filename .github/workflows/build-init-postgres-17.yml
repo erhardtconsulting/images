@@ -17,7 +17,7 @@ permissions:
 jobs:
   call-build-workflow:
     name: Build & Push Base
-    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    uses: ./build-container.yml
     with:
       image: "init-postgres"
       dockerfile: "pg17.Dockerfile"

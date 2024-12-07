@@ -117,13 +117,13 @@ jobs:
       - name: Add build date tag
         run: |
           buildah tag erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.DATE }}
-          echo "PUSH_TAGS=\"erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.DATE }}" >> $GITHUB_ENV
+          echo "PUSH_TAGS=erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.DATE }}" >> $GITHUB_ENV
 
       - name: Tag image as latest
         if: ${{ inputs.latest }}
         run: |
           buildah tag erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} erhardtconsulting/${{ env.IMAGE }}:latest
-          echo "PUSH_TAGS=\"erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.DATE }} erhardtconsulting/${{ env.IMAGE }}:latest\"" >> $GITHUB_ENV
+          echo "PUSH_TAGS=erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.DATE }} erhardtconsulting/${{ env.IMAGE }}:latest" >> $GITHUB_ENV
 
       - name: Push image to ghcr
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
