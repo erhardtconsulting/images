@@ -142,8 +142,8 @@ jobs:
       - name: Push image to quay.io
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
-          registry: quay.io/erhardtconsulting
-          image: ${{ env.IMAGE }}
+          registry: quay.io
+          image: erhardtconsulting/${{ env.IMAGE }}
           tags: ${{ env.PUSH_TAGS }}
           username: "${{ secrets.QUAYIO_USERNAME }}"
           password: "${{ secrets.QUAYIO_TOKEN }}"
