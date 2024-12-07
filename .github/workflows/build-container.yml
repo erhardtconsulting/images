@@ -61,6 +61,7 @@ jobs:
           image: erhardtconsulting/${{ env.IMAGE }}
           tags: ${{ env.TAG }}-${{ env.PLATTFORM }}
           platform: ${{ env.BUILDAH_ARCH }}
+          context: ${{ env.IMAGE }}
           containerfiles: |
             ${{ env.IMAGE }}/${{ env.DOCKERFILE }}
 
