@@ -31,18 +31,15 @@ jobs:
       matrix:
         platform: ["amd64", "arm64"]
     steps:
-      # Install qemu
       - name: Install qemu dependency
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-user-static
 
-      # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      # Export arch
-      - name: Export image name and arch
+      - name: Setup environment variables
         run: |
           echo "IMAGE=${IMAGE}" >> ${GITHUB_ENV}
           echo "PLATFORM=${PLATFORM}" >> ${GITHUB_ENV}
@@ -87,8 +84,8 @@ jobs:
     steps:
       - name: Setup environment variables
         run: |
+          echo "IMAGE=${IMAGE}" >> ${GITHUB_ENV}
           echo "TAG=${TAG}" >> ${GITHUB_ENV}
-          echo "VERSION=${VERSION}" >> ${GITHUB_ENV}
           echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         env:
           IMAGE: ${{ inputs.image }}
