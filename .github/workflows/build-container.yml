@@ -130,11 +130,26 @@ jobs:
           done
           echo "PUSH_TAGS=${{ env.TAG }} ${{ env.TAG }}-${{ env.DATE }} latest" >> $GITHUB_ENV
 
-      - name: Login to all registries
-        run: |
-          podman login --username "${{ github.actor }}" --password "${{ github.token }}" ghcr.io/erhardtconsulting
-          podman login --username "${{ secrets.QUAYIO_USERNAME }}" --password "${{ secrets.QUAYIO_TOKEN }}" quay.io/erhardtconsulting
-          podman login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password "${{ secrets.DOCKERHUB_TOKEN }}" docker.io/erhardtconsulting
+      - name: Log in to ghcr.io
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: ghcr.io/erhardtconsulting
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Log in to Quay.io
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: quay.io/erhardtconsulting
+          username: ${{ secrets.QUAYIO_USERNAME }}
+          password: ${{ secrets.QUAYIO_TOKEN }}
+
+      - name: Log in to Docker Hub
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: quay.io/erhardtconsulting
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push image to ghcr
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
@@ -156,7 +171,3 @@ jobs:
           registry: docker.io/erhardtconsulting
           image: ${{ env.IMAGE }}
           tags: ${{ env.PUSH_TAGS }}
-
-      - name: Logout from all registries
-        run: |
-          podman logout --all
