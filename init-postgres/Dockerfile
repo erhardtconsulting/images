@@ -1,21 +1,28 @@
-FROM docker.io/library/alpine:3.20@sha256:1e42bbe2508154c9126d48c2b8a75420c3544343bf86fd041fb7527e017a4b4a
+FROM docker.io/debian:bookworm-slim@sha256:1537a6a1cbc4b4fd401da800ee9480207e7dc1f23560c21259f681db56768f63
 
-# renovate: datasource=repology depName=alpine_3_20/postgresql16-client versioning=loose
-ARG PG_CLIENT_VERSION="16.6-r0"
+ARG PG_CLIENT_VERSION="16.6-1.pgdg120+1"
 
-USER root
-WORKDIR /app
-
-# Install dependencies
-RUN \
-    apk add --no-cache \
-        bash \
-        ca-certificates \
-        postgresql16-client~"${PG_CLIENT_VERSION}" \
-        tini
+# https://www.postgresql.org/download/linux/debian/
+RUN set -eux; \
+    echo "Installing dependencies..."; \
+    apt-get update; \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+      bash \
+      extrepo \
+      tini; \
+    echo "Enabling PostgreSQL repository..."; \
+    extrepo enable postgresql; \
+    echo "Installing PostgreSQL..."; \
+    apt-get update; \
+	DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+      postgresql-client-16=${PG_CLIENT_VERSION}; \
+    apt-get clean
 
 # Copy root
 COPY root/ /
+
+# Set workdir
+WORKDIR /app
 
 # Set user
 USER nobody:nogroup
