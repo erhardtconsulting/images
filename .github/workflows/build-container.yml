@@ -61,7 +61,7 @@ jobs:
       # Build image
       - name: Build image with podman
         run: |
-          podman build --platform "${{ env.PODMAN_ARCH }}" -f "${{ env.IMAGE }}/${{ env.Dockerfile }}" -t "ghcr.io/erhardtconsulting/${{ env.IMAGE }}:build-${{ env.PLATFORM }}" "${{ env.IMAGE }}/"
+          podman build --platform "${{ env.PODMAN_ARCH }}" -f "${{ env.IMAGE }}/${{ env.DOCKERFILE }}" -t "ghcr.io/erhardtconsulting/${{ env.IMAGE }}:build-${{ env.PLATFORM }}" "${{ env.IMAGE }}/"
 
       # Create tar from container
       - name: Put container to oci
