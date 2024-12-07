@@ -52,7 +52,7 @@ jobs:
           echo "PLATFORM=${PLATFORM}" >> ${GITHUB_ENV}
           [ "${PLATFORM}" = "amd64" ] && echo "PODMAN_ARCH=linux/amd64" >> ${GITHUB_ENV} || true
           [ "${PLATFORM}" = "arm64" ] && echo "PODMAN_ARCH=linux/arm64/v8" >> ${GITHUB_ENV} || true
-          echo "DOCKERFILE=${DOCKERFILE}"
+          echo "DOCKERFILE=${DOCKERFILE}" >> ${GITHUB_ENV}
         env:
           PLATFORM: ${{ matrix.platform }}
           IMAGE: ${{ inputs.image }}
