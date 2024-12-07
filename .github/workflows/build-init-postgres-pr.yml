@@ -17,6 +17,6 @@ jobs:
     name: Build
     uses: erhardtconsulting/images/.github/workflows/build-container.yaml@main
     with:
-      image: base
+      image: init-postgres
       version: "16"
       push: false
