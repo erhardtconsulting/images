@@ -147,7 +147,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: redhat-actions/podman-login@v1
         with:
-          registry: docker.io/erhardtconsulting
+          registry: docker.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -168,6 +168,6 @@ jobs:
       - name: Push image to docker.io
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
-          registry: docker.io/erhardtconsulting
-          image: ${{ env.IMAGE }}
+          registry: docker.io
+          image: erhardtconsulting/${{ env.IMAGE }}
           tags: ${{ env.PUSH_TAGS }}
