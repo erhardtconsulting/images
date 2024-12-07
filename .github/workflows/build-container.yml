@@ -125,11 +125,11 @@ jobs:
       - name: Push image to quay.io
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
+          registry: quay.io/erhardtconsulting
           image: ${{ env.IMAGE }}
           tags: ${{ env.VERSION }} ${{ env.VERSION }}-${{ env.DATE }} latest
-          username: ${{ secrets.QUAYIO_USERNAME }}
-          password: ${{ secrets.QUAYIO_TOKEN }}
-          registry: quay.io/erhardtconsulting
+          username: "${{ secrets.QUAYIO_USERNAME }}"
+          password: "${{ secrets.QUAYIO_TOKEN }}"
 
       - name: Push image to docker.io
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
