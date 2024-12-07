@@ -53,13 +53,14 @@ jobs:
         env:
           PLATFORM: ${{ matrix.platform }}
           IMAGE: ${{ inputs.image }}
+          DOCKERFILE: ${{ inputs.dockerfile }}
           TAG: ${{ inputs.tag }}
 
       - name: Build image with buildah
         uses: redhat-actions/buildah-build@v2
         with:
           image: erhardtconsulting/${{ env.IMAGE }}
-          tags: ${{ env.TAG }}-${{ env.PLATTFORM }}
+          tags: ${{ env.TAG }}-${{ env.PLATFORM }}
           platform: ${{ env.BUILDAH_ARCH }}
           context: ${{ env.IMAGE }}
           containerfiles: |
@@ -67,7 +68,7 @@ jobs:
 
       - name: Create tar image
         run: |
-          buildah push erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.PLATTFORM }} oci-archive:/tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.PLATTFORM }}.tar
+          buildah push erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.PLATFORM }} oci-archive:/tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.PLATFORM }}.tar
 
       # Upload container
       - name: Upload container
