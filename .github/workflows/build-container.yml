@@ -9,9 +9,12 @@ on:
       dockerfile:
         default: Dockerfile
         type: string
-      version:
+      tag:
         required: true
         type: string
+      latest:
+        default: false
+        type: boolean
       push:
         default: false
         type: boolean
@@ -38,44 +41,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      # Enable podman cache
-      - name: Cache podman storage
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4
-        with:
-          path: ~/.local/share/containers/storage
-          key: podman-storage-${{ matrix.platform }}
-
       # Export arch
       - name: Export image name and arch
         run: |
           echo "IMAGE=${IMAGE}" >> ${GITHUB_ENV}
           echo "PLATFORM=${PLATFORM}" >> ${GITHUB_ENV}
-          [ "${PLATFORM}" = "amd64" ] && echo "PODMAN_ARCH=linux/amd64" >> ${GITHUB_ENV} || true
-          [ "${PLATFORM}" = "arm64" ] && echo "PODMAN_ARCH=linux/arm64/v8" >> ${GITHUB_ENV} || true
+          [ "${PLATFORM}" = "amd64" ] && echo "BUILDAH_ARCH=linux/amd64" >> ${GITHUB_ENV} || true
+          [ "${PLATFORM}" = "arm64" ] && echo "BUILDAH_ARCH=linux/arm64/v8" >> ${GITHUB_ENV} || true
           echo "DOCKERFILE=${DOCKERFILE}" >> ${GITHUB_ENV}
+          echo "TAG=${TAG}" >> ${GITHUB_ENV}
         env:
           PLATFORM: ${{ matrix.platform }}
           IMAGE: ${{ inputs.image }}
-          DOCKERFILE: ${{ inputs.dockerfile }}
+          TAG: ${{ inputs.tag }}
 
-      # Build image
-      - name: Build image with podman
-        run: |
-          podman build --platform "${{ env.PODMAN_ARCH }}" -f "${{ env.IMAGE }}/${{ env.DOCKERFILE }}" -t "ghcr.io/erhardtconsulting/${{ env.IMAGE }}:build-${{ env.PLATFORM }}" "${{ env.IMAGE }}/"
+      - name: Build image with buildah
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: erhardtconsulting/${{ env.IMAGE }}
+          tags: ${{ env.TAG }}-${{ env.PLATTFORM }}
+          platform: ${{ env.BUILDAH_ARCH }}
+          containerfiles: |
+            ${{ env.IMAGE }}/${{ env.DOCKERFILE }}
 
-      # Create tar from container
-      - name: Put container to oci
+      - name: Create tar image
         run: |
-          skopeo copy containers-storage:ghcr.io/erhardtconsulting/${{ env.IMAGE }}:build-${{ env.PLATFORM }} oci-archive:/tmp/${{ env.PLATFORM }}-oci.tar
+          buildah push erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.PLATTFORM }} oci-archive:/tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.PLATTFORM }}.tar
 
       # Upload container
       - name: Upload container
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
         with:
-          name: ${{ env.IMAGE }}-build-${{ env.PLATFORM }}
-          path: /tmp/${{ env.PLATFORM }}-oci.tar
+          name: ${{ env.IMAGE }}-${{ env.TAG }}
+          path: /tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}.tar
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 3
 
   push:
     if: ${{ inputs.push }}
@@ -83,59 +83,66 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Export image name
+      - name: Setup environment variables
         run: |
-          echo "IMAGE=${IMAGE}" >> ${GITHUB_ENV}
+          echo "TAG=${TAG}" >> ${GITHUB_ENV}
           echo "VERSION=${VERSION}" >> ${GITHUB_ENV}
           echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         env:
           IMAGE: ${{ inputs.image }}
-          VERSION: ${{ inputs.version }}
+          TAG: ${{ inputs.tag }}
 
-      - name: Download amd64
+      - name: Download images
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
         with:
-          name: ${{ env.IMAGE }}-build-amd64
+          name: ${{ env.IMAGE }}-${{ env.TAG }}
           path: /tmp
 
-      - name: Download arm64
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
-        with:
-          name: ${{ env.IMAGE }}-build-arm64
-          path: /tmp
-
-      - name: Create multi-arch image
+      - name: List images
         run: |
-          podman manifest create ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest
-          podman manifest add ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest oci-archive:/tmp/arm64-oci.tar
-          podman manifest add ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest oci-archive:/tmp/amd64-oci.tar
-          podman tag ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest ghcr.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }} ghcr.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }}-${{ env.DATE }} ghcr.io/erhardtconsulting/${{ env.IMAGE }}:latest 
-          podman tag ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest quay.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }} quay.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }}-${{ env.DATE }} quay.io/erhardtconsulting/${{ env.IMAGE }}:latest
-          podman tag ghcr.io/erhardtconsulting/${{ env.IMAGE }}:manifest docker.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }} docker.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.VERSION }}-${{ env.DATE }} docker.io/erhardtconsulting/${{ env.IMAGE }}:latest
+          ls /tmp
+
+      - name: Create manifest
+        run: |
+          buildah manifest create erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}
+          for arch in "amd64" "arm64"; do
+            buildah manifest add erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} oci-archive:/tmp/${{ env.IMAGE }}-${{ env.TAG }}-$arch.tar
+          done 
+
+      - name: Add build date tag
+        run: |
+          buildah tag erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.DATE }}
+          echo "PUSH_TAGS=\"erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.DATE }}" >> $GITHUB_ENV
+
+      - name: Tag image as latest
+        if: ${{ inputs.latest }}
+        run: |
+          buildah tag erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} erhardtconsulting/${{ env.IMAGE }}:latest
+          echo "PUSH_TAGS=\"erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.DATE }} erhardtconsulting/${{ env.IMAGE }}:latest\"" >> $GITHUB_ENV
 
       - name: Push image to ghcr
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
-          image: ${{ env.IMAGE }}
-          tags: ${{ env.VERSION }} ${{ env.VERSION }}-${{ env.DATE }} latest
+          registry: ghcr.io/erhardtconsulting
+          image: erhardtconsulting/${{ env.IMAGE }}
+          tags: ${{ env.PUSH_TAGS }}
           username: ${{ github.actor }}
           password: ${{ github.token }}
-          registry: ghcr.io/erhardtconsulting
 
       - name: Push image to quay.io
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
           registry: quay.io/erhardtconsulting
-          image: ${{ env.IMAGE }}
-          tags: ${{ env.VERSION }} ${{ env.VERSION }}-${{ env.DATE }} latest
+          image: erhardtconsulting/${{ env.IMAGE }}
+          tags: ${{ env.PUSH_TAGS }}
           username: "${{ secrets.QUAYIO_USERNAME }}"
           password: "${{ secrets.QUAYIO_TOKEN }}"
 
       - name: Push image to docker.io
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
-          image: ${{ env.IMAGE }}
-          tags: ${{ env.VERSION }} ${{ env.VERSION }}-${{ env.DATE }} latest
+          registry: docker.io/erhardtconsulting
+          image: erhardtconsulting/${{ env.IMAGE }}
+          tags: ${{ env.PUSH_TAGS }}
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          registry: docker.io/erhardtconsulting
