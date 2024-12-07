@@ -25,6 +25,6 @@ WORKDIR /app
 # Set user
 USER nobody:nogroup
 
-ENTRYPOINT ["/sbin/tini", "--"]
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
 CMD ["/docker-run.sh"]
