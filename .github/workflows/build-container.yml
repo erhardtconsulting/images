@@ -75,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
         with:
           name: ${{ env.IMAGE }}-${{ env.TAG }}
-          path: /tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.ARCH }}.tar
+          path: /tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.PLATFORM }}.tar
           if-no-files-found: error
           retention-days: 3
 
