@@ -18,6 +18,12 @@ on:
       push:
         default: false
         type: boolean
+      push-quay:
+        default: true
+        type: boolean
+      push-docker:
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -159,6 +165,7 @@ jobs:
           tags: ${{ env.PUSH_TAGS }}
 
       - name: Push image to quay.io
+        if: ${{ inputs.push-quay }}
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
           registry: quay.io/erhardtconsulting
@@ -166,6 +173,7 @@ jobs:
           tags: ${{ env.PUSH_TAGS }}
 
       - name: Push image to docker.io
+        if: ${{ inputs.push-docker }}
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
         with:
           registry: docker.io

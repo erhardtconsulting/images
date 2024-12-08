@@ -25,6 +25,10 @@ WORKDIR /app
 # Set user
 USER nobody:nogroup
 
+LABEL org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
+LABEL org.opencontainers.image.description="PostgreSQL 16 init database container"
+LABEL org.opencontainers.image.licenses="MIT"
+
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
 CMD ["/docker-run.sh"]

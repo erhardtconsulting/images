@@ -1,0 +1,39 @@
+name: "Renovate: Build & Push Container Image"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'renovate/Dockerfile'
+      - 'renovate/root/**'
+      - '.github/workflows/build-container.yml'
+      - '.github/workflows/build-renovate.yml'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  get-version:
+    runs-on: ubuntu-24.04
+    outputs:
+      renovate: ${{ steps.renovate_version.outputs.RENOVATE_VERSION }}
+    steps:
+      - name: Get renovate version
+        id: renovate_version
+        run: |
+          echo "RENOVATE_VERSION=$(grep -E '^FROM docker.io/renovate/renovate:[0-9]+\.[0-9]+\.[0-9]+' renovate/Dockerfile | cut -d ':' -f 2 | tr -d '@sha256')" >> $GITHUB_OUTPUT
+  call-build-workflow:
+    name: Build & Push Base
+    needs: get-version
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    with:
+      image: "renovate"
+      dockerfile: "Dockerfile"
+      tag: ${{ needs.get-version.outputs.renovate }}
+      push: true
+      push-quay: false
+      push-docker: false
+      latest: true
+    secrets: inherit
