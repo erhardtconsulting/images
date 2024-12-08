@@ -1,7 +1,7 @@
 FROM docker.io/library/ubuntu:24.04@sha256:278628f08d4979fb9af9ead44277dbc9c92c2465922310916ad0c46ec9999295
 
 # renovate: datasource=github-releases depName=getsops/sops versioning=semver
-ARG SOPS_VERSION="v3.9.1"
+ARG SOPS_VERSION="v3.9.2"
 
 # renovate: datasource=github-tags depName=nvm-sh/nvm versioning=semver
 ARG NVM_VERSION="v0.40.1"
