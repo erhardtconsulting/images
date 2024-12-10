@@ -15,12 +15,26 @@ permissions:
   packages: write
 
 jobs:
+  get-version:
+    runs-on: ubuntu-24.04
+    outputs:
+      postgresql: ${{ steps.postgresql_version.outputs.POSTGRESQL_VERSION }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Get PostgreSQL version
+        id: postgresql_version
+        run: |
+          echo "POSTGRESQL_VERSION=$(./get-apt-version.sh http://apt.postgresql.org bookworm-pgdg postgresql-client-16 | sed -E 's/^([0-9]+\.[0-9]+).*$/\1/')" >> $GITHUB_OUTPUT
+
   call-build-workflow:
     name: Build
+    needs: get-version
     uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
     with:
       image: "init-postgres"
       dockerfile: "pg16.Dockerfile"
-      tag: "16"
+      tag: ${{ needs.get-version.outputs.postgresql }}
       push: false
     secrets: inherit
