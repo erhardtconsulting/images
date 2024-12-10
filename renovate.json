@@ -36,7 +36,10 @@
     },
     {
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["ghcr.io/erhardtconsulting/*"],
+      "matchPackageNames": [
+        "ghcr.io/erhardtconsulting/*",
+        "docker.io/renovate/renovate"
+      ],
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
     },
