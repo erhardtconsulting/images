@@ -1,4 +1,4 @@
-FROM ghcr.io/erhardtconsulting/base-php:8.3.13@sha256:4e1690c0929dd5b44d67981e018b99019b69c5af3a26bd18e251d09fd7035e98
+FROM ghcr.io/erhardtconsulting/base-php:8.4.1@sha256:24e9eba0e24c3792e2e7dbfd1e91228aa1cd666e807337a9f43d486bb067ce5f
 
 # Get target arch
 ARG TARGETARCH
