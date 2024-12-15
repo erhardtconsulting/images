@@ -123,10 +123,9 @@ jobs:
       - name: Add tags
         run: |
           for registry in "ghcr.io" "quay.io" "docker.io"; do
-            buildah tag erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} ${registry}/erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} 
-            buildah tag erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} ${registry}/erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}-${{ env.DATE }}
+            buildah tag erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} ${registry}/erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}
           done
-          echo "PUSH_TAGS=${{ env.TAG }} ${{ env.TAG }}-${{ env.DATE }}" >> $GITHUB_ENV
+          echo "PUSH_TAGS=${{ env.TAG }}" >> $GITHUB_ENV
 
       - name: Tag image as latest
         if: ${{ inputs.latest }}
@@ -134,7 +133,7 @@ jobs:
           for registry in "ghcr.io" "quay.io" "docker.io"; do
             buildah tag erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} ${registry}/erhardtconsulting/${{ env.IMAGE }}:latest
           done
-          echo "PUSH_TAGS=${{ env.TAG }} ${{ env.TAG }}-${{ env.DATE }} latest" >> $GITHUB_ENV
+          echo "PUSH_TAGS=${{ env.TAG }} latest" >> $GITHUB_ENV
 
       - name: Log in to ghcr.io
         uses: redhat-actions/podman-login@v1
