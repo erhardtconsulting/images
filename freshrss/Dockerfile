@@ -4,7 +4,7 @@ FROM ghcr.io/erhardtconsulting/base-php:8.3.13@sha256:5e7fea19f1ab7fc8741a21f032
 ARG TARGETARCH
 
 # renovate: datasource=github-tags depName=FreshRSS/FreshRSS versioning=semver
-ARG FRESHRSS_VERSION="1.24.3"
+ARG FRESHRSS_VERSION="1.25.0"
 
 RUN set -eux; \
     # Install PHP extensions
