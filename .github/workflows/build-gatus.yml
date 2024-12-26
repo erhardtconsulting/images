@@ -1,0 +1,43 @@
+name: "Gatus: Build & Push Container Image"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'gatus/Dockerfile'
+      - '.github/workflows/build-container.yml'
+      - '.github/workflows/build-gatus.yml'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  get-version:
+    runs-on: ubuntu-24.04
+    outputs:
+      gatus: ${{ steps.gatus_version.outputs.GATUS_VERSION }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Extract GATUS_VERSION from Dockerfile
+        id: gatus_version
+        run: |
+          GATUS_VERSION=$(grep -E '^ARG GATUS_VERSION=' gatus/Dockerfile | cut -d '=' -f 2 | tr -d '"')
+          echo "GATUS_VERSION=$GATUS_VERSION" >> $GITHUB_OUTPUT
+
+  call-build-workflow:
+    name: Build & Push Base
+    needs: get-version
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    with:
+      image: "gatus"
+      dockerfile: "Dockerfile"
+      tag: ${{ needs.get-version.outputs.gatus }}
+      push: true
+      push-quay: false
+      push-docker: false
+      latest: true
+    secrets: inherit
