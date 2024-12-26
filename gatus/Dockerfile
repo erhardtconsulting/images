@@ -31,9 +31,7 @@ RUN set -eux; \
       bash \
       ca-certificates \
       inetutils-ping \
-      libcap2-bin \
       tini; \
-    apt-get remove -y libcap2-bin; \
     apt-get clean
 
 # expose port 8080
