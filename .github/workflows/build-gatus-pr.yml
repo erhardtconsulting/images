@@ -1,7 +1,7 @@
 name: "Gatus: Build Container Image / Pull Request"
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
