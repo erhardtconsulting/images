@@ -30,9 +30,9 @@ RUN set -eux; \
     DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
       bash \
       ca-certificates \
+      inetutils-ping \
       libcap2-bin \
       tini; \
-    setcap cap_net_raw=+ep /usr/bin/gatus; \
     apt-get remove -y libcap2-bin; \
     apt-get clean
 
