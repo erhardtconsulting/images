@@ -19,10 +19,10 @@ on:
         default: false
         type: boolean
       push-quay:
-        default: true
+        default: false
         type: boolean
       push-docker:
-        default: true
+        default: false
         type: boolean
 
 permissions:

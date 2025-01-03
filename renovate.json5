@@ -3,21 +3,6 @@
   "extends": [
     "github>erhardtconsulting/renovate-rules:default"
   ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "fileMatch": [
-        "base-php/Dockerfile"
-      ],
-      "matchStrings": [
-        "FROM docker.io/library/php:(?<currentValue>[0-9.]+-fpm)@sha256:(?<digest>[a-f0-9]{64})"
-      ],
-      "depNameTemplate": "php",
-      "datasourceTemplate": "docker",
-      "versioningTemplate": "semver",
-      "extractVersionTemplate": "^(?<version>[0-9.]+)-fpm$"
-    }
-  ],
   "packageRules": [
     {
       "matchDatasources": ["docker"],
@@ -26,12 +11,6 @@
         "docker.io/library/ubuntu"
       ],
       "matchUpdateTypes": ["digest"],
-      "automerge": true
-    },
-    {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["docker.io/library/php"],
-      "matchUpdateTypes": ["patch","digest"],
       "automerge": true
     },
     {
@@ -47,6 +26,24 @@
       "matchDatasources": ["github-releases"],
       "matchPackageNames": ["nextcloud/server"],
       "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    // base-php/8.3.Dockerfile - Use php 8.3.x
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/library/php"],
+      "matchPaths": ["base-php/8.3.Dockerfile"],
+      "allowedVersions": "8.3.x",
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true
+    },
+    // base-php/8.4.Dockerfile - Use php 8.4.x
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/library/php"],
+      "matchPaths": ["base-php/8.4.Dockerfile"],
+      "allowedVersions": "8.4.x",
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
     }
   ]

@@ -1,0 +1,37 @@
+name: "PHP 8.4.x: Build Container Image / Pull Request"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'base-php/8.4.Dockerfile'
+      - '.github/workflows/build-container.yml'
+      - '.github/workflows/build-base-php-8.4-pr.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  get-version:
+    runs-on: ubuntu-24.04
+    outputs:
+      php: ${{ steps.php_version.outputs.PHP_VERSION }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Get PHP version
+        id: php_version
+        run: |
+          echo "PHP_VERSION=$(grep -E '^FROM docker.io/library/php:[0-9]+\.[0-9]+\.[0-9]+' base-php/8.4.Dockerfile | sed -E 's|.*php:([0-9]+\.[0-9]+\.[0-9]+).*|\1|')" >> $GITHUB_OUTPUT
+
+  call-build-workflow:
+    name: Build & Push Base
+    needs: get-version
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    with:
+      image: "base-php"
+      dockerfile: "8.4.Dockerfile"
+      tag: ${{ needs.get-version.outputs.php }}
+    secrets: inherit
