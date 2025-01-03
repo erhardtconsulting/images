@@ -81,7 +81,7 @@ jobs:
             sudo rm $SWAP_FILE
           fi
           
-          SWAP_FILE="$(mktemp)"
+          SWAP_FILE="$(mktemp --tmpdir ${{ github.workspace }})"
           echo "SWAP_FILE=$SWAP_FILE" >> $GITHUB_OUTPUT
           
           sudo fallocate -l "${{ inputs.swap-size }}" $SWAP_FILE
