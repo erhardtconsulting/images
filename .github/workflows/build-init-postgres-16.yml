@@ -38,4 +38,5 @@ jobs:
       tag: ${{ needs.get-version.outputs.postgresql }}
       push: true
       latest: true
+      use-swap: true
     secrets: inherit

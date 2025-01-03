@@ -19,11 +19,17 @@ on:
         default: false
         type: boolean
       push-quay:
-        default: false
+        default: true
         type: boolean
       push-docker:
+        default: true
+        type: boolean
+      use-swap:
         default: false
         type: boolean
+      swap-size:
+        default: "4G"
+        type: string
 
 permissions:
   contents: read
@@ -59,6 +65,30 @@ jobs:
           DOCKERFILE: ${{ inputs.dockerfile }}
           TAG: ${{ inputs.tag }}
 
+      - name: Use Swap | Report
+        if: ${{ inputs.use-swap }}
+        run: |
+          echo "Available memory and swap:"
+          free -h
+
+      - name: Use Swap | Enable
+        if: ${{ inputs.use-swap }}
+        id: swap_setup
+        run: |
+          SWAP_FILE="$(swapon --show=NAME | tail -n 1)"
+          if [ -n "$SWAP_FILE" ]; then
+            sudo swapoff $SWAP_FILE
+            sudo rm $SWAP_FILE
+          fi
+          
+          SWAP_FILE="$(mktemp)"
+          echo "SWAP_FILE=$SWAP_FILE" >> $GITHUB_OUTPUT
+          
+          sudo fallocate -l "${{ inputs.swap-size }}" $SWAP_FILE
+          sudo chmod 600 $SWAP_FILE
+          sudo mkswap $SWAP_FILE
+          sudo swapon $SWAP_FILE
+
       - name: Build image with buildah
         uses: redhat-actions/buildah-build@v2
         with:
@@ -81,6 +111,13 @@ jobs:
           path: /tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.PLATFORM }}.tar
           if-no-files-found: error
           retention-days: 3
+
+      - name: Use Swap | Disable
+        if: ${{ inputs.use-swap }}
+        run: |
+          SWAP_FILE="${{ steps.swap_setup.outputs.SWAP_FILE }}"
+          sudo swapoff $SWAP_FILE
+          sudo rm $SWAP_FILE
 
   push:
     if: ${{ inputs.push }}
