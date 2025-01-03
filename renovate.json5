@@ -1,57 +1,57 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "github>erhardtconsulting/renovate-rules:default"
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'github>erhardtconsulting/renovate-rules:default'
   ],
-  "packageRules": [
+  packageRules: [
     /*
       Version restrictions
     */
     // base-php/8.3.Dockerfile - Restrict to php 8.3.x
     {
-      "matchPaths": ["base-php/8.3.Dockerfile"],
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["docker.io/library/php"],
-      "allowedVersions": "8.3.x"
+      matchFileNames: ['base-php/8.3.Dockerfile'],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['docker.io/library/php'],
+      allowedVersions: '8.3.x'
     },
     // base-php/8.4.Dockerfile - Restrict to php 8.4.x
     {
-      "matchPaths": ["base-php/8.4.Dockerfile"],
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["docker.io/library/php"],
-      "allowedVersions": "8.4.x"
+      matchFileNames: ['base-php/8.4.Dockerfile'],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['docker.io/library/php'],
+      allowedVersions: '8.4.x'
     },
     /*
       Auto-merge configuration
     */
     // Auto-merge docker digest-only
     {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["docker.io/library/debian"],
-      "matchUpdateTypes": ["digest"],
-      "automerge": true
+      matchDatasources: ['docker'],
+      matchPackageNames: ['docker.io/library/debian'],
+      matchUpdateTypes: ['digest'],
+      automerge: true
     },
     // Auto-merge docker minor, patch, digest
     {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": [
-        "docker.io/library/php",
-        "docker.io/renovate/renovate"
+      matchDatasources: ['docker'],
+      matchPackageNames: [
+        'docker.io/library/php',
+        'docker.io/renovate/renovate'
       ],
-      "matchUpdateTypes": ["minor", "patch", "digest"],
-      "automerge": true
+      matchUpdateTypes: ['minor', 'patch', 'digest'],
+      automerge: true
     },
     // Auto-merge github-releases
     {
-      "matchDatasources": ["github-releases"],
-      "matchPackageNames": [
-        "aptible/supercronic",
-        "mlocati/docker-php-extension-installer",
-        "nextcloud/server",
-        "TwiN/gatus"
+      matchDatasources: ['github-releases'],
+      matchPackageNames: [
+        'aptible/supercronic',
+        'mlocati/docker-php-extension-installer',
+        'nextcloud/server',
+        'TwiN/gatus'
       ],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      matchUpdateTypes: ['minor', 'patch'],
+      automerge: true
     }
   ]
 }
