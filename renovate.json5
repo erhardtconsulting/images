@@ -4,6 +4,27 @@
     "github>erhardtconsulting/renovate-rules:default"
   ],
   "packageRules": [
+    // All - Auto-merge debian digests
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/library/debian"],
+      "matchUpdateTypes": ["digest"],
+      "automerge": true
+    },
+    // base-php/*.Dockerfile - Auto-merge docker-php-extension-installer / supercronic
+    {
+      "matchPaths": [
+        "base-php/8.3.Dockerfile",
+        "base-php/8.4.Dockerfile"
+      ],
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": [
+        "aptible/supercronic",
+        "mlocati/docker-php-extension-installer"
+      ],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
     // base-php/8.3.Dockerfile - Auto-merge php 8.3.x
     {
       "matchPaths": ["base-php/8.3.Dockerfile"],
@@ -20,6 +41,14 @@
       "matchPackageNames": ["docker.io/library/php"],
       "allowedVersions": "8.4.x",
       "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true
+    },
+    // gatus/Dockerfile - Auto-merge Gatus
+    {
+      "matchPaths": ["gatus/Dockerfile"],
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["TwiN/gatus"],
+      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     },
     // renovate/Dockerfile - Auto-merge Renovate
