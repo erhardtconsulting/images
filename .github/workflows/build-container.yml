@@ -97,7 +97,7 @@ jobs:
           free -h
 
       - name: Build image with buildah
-        uses: redhat-actions/buildah-build@v2
+        uses: redhat-actions/buildah-build@7a95fa7ee0f02d552a32753e7414641a04307056 # v2
         with:
           image: erhardtconsulting/${{ env.IMAGE }}
           tags: ${{ env.TAG }}-${{ env.PLATFORM }}
@@ -180,21 +180,21 @@ jobs:
           echo "PUSH_TAGS=${{ env.TAG }} latest" >> $GITHUB_ENV
 
       - name: Log in to ghcr.io
-        uses: redhat-actions/podman-login@v1
+        uses: redhat-actions/podman-login@4934294ad0449894bcd1e9f191899d7292469603 # v1
         with:
           registry: ghcr.io/erhardtconsulting
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
       - name: Log in to Quay.io
-        uses: redhat-actions/podman-login@v1
+        uses: redhat-actions/podman-login@4934294ad0449894bcd1e9f191899d7292469603 # v1
         with:
           registry: quay.io/erhardtconsulting
           username: ${{ secrets.QUAYIO_USERNAME }}
           password: ${{ secrets.QUAYIO_TOKEN }}
 
       - name: Log in to Docker Hub
-        uses: redhat-actions/podman-login@v1
+        uses: redhat-actions/podman-login@4934294ad0449894bcd1e9f191899d7292469603 # v1
         with:
           registry: docker.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
