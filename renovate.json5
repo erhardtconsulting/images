@@ -4,46 +4,40 @@
     "github>erhardtconsulting/renovate-rules:default"
   ],
   "packageRules": [
+    // base-php/8.3.Dockerfile - Auto-merge php 8.3.x
     {
+      "matchPaths": ["base-php/8.3.Dockerfile"],
       "matchDatasources": ["docker"],
-      "matchPackageNames": [
-        "docker.io/library/alpine",
-        "docker.io/library/ubuntu"
-      ],
-      "matchUpdateTypes": ["digest"],
+      "matchPackageNames": ["docker.io/library/php"],
+      "allowedVersions": "8.3.x",
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
     },
+    // base-php/8.4.Dockerfile - Auto-merge php 8.4.x
     {
+      "matchPaths": ["base-php/8.4.Dockerfile"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker.io/library/php"],
+      "allowedVersions": "8.4.x",
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true
+    },
+    // renovate/Dockerfile - Auto-merge Renovate
+    {
+      "matchPaths": ["renovate/Dockerfile"],
       "matchDatasources": ["docker"],
       "matchPackageNames": [
-        "ghcr.io/erhardtconsulting/*",
         "docker.io/renovate/renovate"
       ],
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
     },
+    // nextcloud/Dockerfile - Auto-merge Nextcloud
     {
+      "matchPaths": ["nextcloud/Dockerfile"],
       "matchDatasources": ["github-releases"],
       "matchPackageNames": ["nextcloud/server"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
-    },
-    // base-php/8.3.Dockerfile - Use php 8.3.x
-    {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["docker.io/library/php"],
-      "matchPaths": ["base-php/8.3.Dockerfile"],
-      "allowedVersions": "8.3.x",
-      "matchUpdateTypes": ["minor", "patch", "digest"],
-      "automerge": true
-    },
-    // base-php/8.4.Dockerfile - Use php 8.4.x
-    {
-      "matchDatasources": ["docker"],
-      "matchPackageNames": ["docker.io/library/php"],
-      "matchPaths": ["base-php/8.4.Dockerfile"],
-      "allowedVersions": "8.4.x",
-      "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
     }
   ]
