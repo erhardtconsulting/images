@@ -28,7 +28,7 @@ on:
         default: false
         type: boolean
       swap-size:
-        default: "4G"
+        default: "8G"
         type: string
 
 permissions:
@@ -65,13 +65,13 @@ jobs:
           DOCKERFILE: ${{ inputs.dockerfile }}
           TAG: ${{ inputs.tag }}
 
-      - name: Use Swap | Report
+      - name: Use Swap | Report without Swap
         if: ${{ inputs.use-swap }}
         run: |
           echo "Available memory and swap:"
           free -h
 
-      - name: Use Swap | Enable
+      - name: Use Swap | Enable Swap
         if: ${{ inputs.use-swap }}
         id: swap_setup
         run: |
@@ -84,10 +84,17 @@ jobs:
           SWAP_FILE="$(mktemp -p ${{ github.workspace }})"
           echo "SWAP_FILE=$SWAP_FILE" >> $GITHUB_OUTPUT
           
+          sudo chown root:root $SWAP_FILE
           sudo fallocate -l "${{ inputs.swap-size }}" $SWAP_FILE
           sudo chmod 600 $SWAP_FILE
           sudo mkswap $SWAP_FILE
           sudo swapon $SWAP_FILE
+
+      - name: Use Swap | Report with Swap
+        if: ${{ inputs.use-swap }}
+        run: |
+          echo "Available memory and swap:"
+          free -h
 
       - name: Build image with buildah
         uses: redhat-actions/buildah-build@v2
@@ -112,7 +119,7 @@ jobs:
           if-no-files-found: error
           retention-days: 3
 
-      - name: Use Swap | Disable
+      - name: Use Swap | Disable Swap
         if: ${{ inputs.use-swap }}
         run: |
           SWAP_FILE="${{ steps.swap_setup.outputs.SWAP_FILE }}"
