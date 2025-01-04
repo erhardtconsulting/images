@@ -46,9 +46,22 @@
       matchDatasources: ['github-releases'],
       matchPackageNames: [
         'aptible/supercronic',
+        'dotenvx/dotenvx',
+        'getsops/sops',
         'mlocati/docker-php-extension-installer',
         'nextcloud/server',
+        'rclone/rclone',
         'TwiN/gatus'
+      ],
+      matchUpdateTypes: ['minor', 'patch'],
+      automerge: true
+    },
+    // Auto-merge github-tags
+    {
+      matchDatasources: ['github-releases'],
+      matchPackageNames: [
+        'nodejs/node',
+        'nvm-sh/nvm'
       ],
       matchUpdateTypes: ['minor', 'patch'],
       automerge: true
