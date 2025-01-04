@@ -29,7 +29,7 @@ jobs:
           echo "GATUS_VERSION=$GATUS_VERSION" >> $GITHUB_OUTPUT
 
   call-build-workflow:
-    name: Build & Push Base
+    name: Build & Push
     needs: get-version
     uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
     with:

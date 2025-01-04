@@ -30,6 +30,10 @@ on:
       swap-size:
         default: "8G"
         type: string
+      architectures:
+        description: "List of architectures as JSON-array"
+        type: string
+        default: '["amd64","arm64"]'
 
 permissions:
   contents: read
@@ -41,7 +45,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        platform: ["amd64", "arm64"]
+        platform: ${{ fromJSON(inputs.architectures) }}
     steps:
       - name: Install qemu dependency
         run: |
@@ -129,7 +133,7 @@ jobs:
   push:
     if: ${{ inputs.push }}
     name: Push image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: build
     steps:
       - name: Setup environment variables
@@ -141,28 +145,33 @@ jobs:
           IMAGE: ${{ inputs.image }}
           TAG: ${{ inputs.tag }}
 
-      - name: Download amd64
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
-        with:
-          name: ${{ env.IMAGE }}-${{ env.TAG }}-amd64
-          path: /tmp
-
-      - name: Download arm64
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
-        with:
-          name: ${{ env.IMAGE }}-${{ env.TAG }}-arm64
-          path: /tmp
+      - name: Download all artifacts
+        run: |
+          ARCHS=$(echo '${{ inputs.architectures }}' | jq -r '.[]')
+          mkdir -p /tmp
+          for arch in $ARCHS; do
+            echo "==> Downloading artifact: $arch"
+            gh run download ${GITHUB_RUN_ID} --name "${IMAGE}-${TAG}-$arch" --dir /tmp
+          done
+        env:
+          IMAGE: ${{ env.IMAGE }}
+          TAG: ${{ env.TAG }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: List images
-        run: |
-          ls /tmp
+        run: ls -lh /tmp
 
-      - name: Create manifest
+      - name: Create multiarch-manifest
         run: |
-          buildah manifest create erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}
-          for arch in "amd64" "arm64"; do
-            buildah manifest add erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} oci-archive:/tmp/${{ env.IMAGE }}-${{ env.TAG }}-$arch.tar
-          done 
+          ARCHS=$(echo '${{ inputs.architectures }}' | jq -r '.[]')
+          buildah manifest create erhardtconsulting/${IMAGE}:${TAG}
+          for arch in $ARCHS; do
+            echo "==> Adding: $arch"
+            buildah manifest add erhardtconsulting/${IMAGE}:${TAG} oci-archive:/tmp/${IMAGE}-${TAG}-${arch}.tar
+          done
+        env:
+          IMAGE: ${{ env.IMAGE }}
+          TAG: ${{ env.TAG }}
 
       - name: Add tags
         run: |

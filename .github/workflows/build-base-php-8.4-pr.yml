@@ -28,11 +28,12 @@ jobs:
           echo "PHP_VERSION=$(grep -E '^FROM docker.io/library/php:[0-9]+\.[0-9]+\.[0-9]+' base-php/8.4.Dockerfile | sed -E 's|.*php:([0-9]+\.[0-9]+\.[0-9]+).*|\1|')" >> $GITHUB_OUTPUT
 
   call-build-workflow:
-    name: Build & Push Base
+    name: Build
     needs: get-version
     uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
     with:
       image: "base-php"
       dockerfile: "8.4.Dockerfile"
       tag: ${{ needs.get-version.outputs.php }}
+      push: false
     secrets: inherit

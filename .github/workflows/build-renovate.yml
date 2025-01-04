@@ -28,7 +28,7 @@ jobs:
         run: |
           echo "RENOVATE_VERSION=$(grep -E '^FROM docker.io/renovate/renovate:[0-9]+\.[0-9]+\.[0-9]+' renovate/Dockerfile | cut -d ':' -f 2 | tr -d '@sha256')" >> $GITHUB_OUTPUT
   call-build-workflow:
-    name: Build & Push Base
+    name: Build & Push
     needs: get-version
     uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
     with:

@@ -1,66 +1,29 @@
-name: "Ubuntu Runner 24.04: Build & Publish Docker Image"
+name: "Ubuntu 24.04 Runner: Build & Push Container Image"
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'ubuntu-runner/24.04/**'
+      - 'ubuntu-runner/24.04.Dockerfile'
+      - '.github/workflows/build-container.yml'
       - '.github/workflows/build-ubuntu-runner-24.04.yml'
-  workflow_dispatch:
 
 permissions:
   contents: read
   packages: write
 
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - name: Set up QEMU for multi-architecture build
-        uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3
-        with:
-          platforms: all
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5 # v3
-        with:
-          install: true
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
-        with:
-          registry: docker.io
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Log in to Quay.io
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAYIO_USERNAME }}
-          password: ${{ secrets.QUAYIO_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@48aba3b46d1b1fec4febb7c5d0c644b249a11355 # v6
-        with:
-          context: ubuntu-runner/24.04
-          platforms: "linux/amd64"
-          push: true
-          tags: |
-            ghcr.io/erhardtconsulting/ubuntu-runner:24.04
-            ghcr.io/erhardtconsulting/ubuntu-runner:latest
-            docker.io/erhardtconsulting/ubuntu-runner:24.04
-            docker.io/erhardtconsulting/ubuntu-runner:latest
-            quay.io/erhardtconsulting/ubuntu-runner:24.04
-            quay.io/erhardtconsulting/ubuntu-runner:latest
+  call-build-workflow:
+    name: Build & Push
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    with:
+      image: ubuntu-runner
+      dockerfile: 24.04.Dockerfile
+      tag: 24.04
+      latest: true
+      push: true
+      push-docker: false
+      push-quay: false
+      architectures: '["amd64"]'
+    secrets: inherit
