@@ -151,7 +151,7 @@ jobs:
           mkdir -p /tmp
           for arch in $ARCHS; do
             echo "==> Downloading artifact: $arch"
-            gh run download ${GITHUB_RUN_ID} --name "${IMAGE}-${TAG}-$arch" --dir /tmp
+            gh run --repo github.com/erhardtconsulting/images download ${GITHUB_RUN_ID} --name "${IMAGE}-${TAG}-$arch" --dir /tmp
           done
         env:
           IMAGE: ${{ env.IMAGE }}
