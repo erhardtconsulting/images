@@ -1,4 +1,4 @@
-name: "FreshRSS: Build Docker Image / Pull Request"
+name: "FreshRSS: Build Container Image / Pull Request"
 
 on:
   pull_request:
@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - 'freshrss/**'
+      - '.github/workflows/build-freshrss-pr.yml'
+      - '.github/workflows/build-container.yml'
 
 permissions:
   contents: read

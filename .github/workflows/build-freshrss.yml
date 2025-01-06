@@ -1,4 +1,4 @@
-name: "FreshRSS: Build & Publish Docker Image"
+name: "FreshRSS: Build & Publish Container Image"
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
     paths:
       - 'freshrss/**'
       - '.github/workflows/build-freshrss.yml'
+      - '.github/workflows/build-container.yml'
   workflow_dispatch:
 
 permissions:
