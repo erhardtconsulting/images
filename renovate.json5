@@ -21,6 +21,13 @@
       matchPackageNames: ['docker.io/library/php'],
       allowedVersions: '8.4.x'
     },
+    // nextcloud/Dockerfile - Restrict to php 8.3.x
+    {
+      matchFileNames: ['nextcloud/Dockerfile'],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['ghcr.io/erhardtconsulting/base-php'],
+      allowedVersions: '8.3.x'
+    },
     /*
       Auto-merge configuration
     */

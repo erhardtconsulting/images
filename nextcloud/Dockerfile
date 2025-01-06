@@ -1,4 +1,4 @@
-FROM ghcr.io/erhardtconsulting/base-php:8.3.13@sha256:5e7fea19f1ab7fc8741a21f0328cf82a40130b772c92e59b38b108b299c08f45
+FROM ghcr.io/erhardtconsulting/base-php:8.3.13@sha256:ecd26eb36a51c49c2c4ba0384ce6f751a499455d9ee6ae04a8f42670666b1401
 
 # Nextcloud gpg key for verification
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -23,7 +23,6 @@ RUN set -eux; \
       intl \
       ldap \
       mbstring \
-      mcrypt \
       memcached \
       mysqli \
       opcache \
@@ -55,7 +54,7 @@ RUN set -eux; \
       libmagickwand-6.q16-dev \
       libpng-dev; \
     # <<< End of Imagick installation
-    docker-php-ext-enable apcu imagick mcrypt memcached redis; \
+    docker-php-ext-enable apcu imagick memcached redis; \
     apt-get -y autoremove; \
     apt-get clean; \
     # Enable PHP production settings
