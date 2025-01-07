@@ -7,7 +7,7 @@ ARG SOPS_VERSION="v3.9.3"
 ARG NVM_VERSION="v0.40.1"
 
 # renovate: datasource=github-tags depName=nodejs/node versioning=semver
-ARG NODE_VERSION="v22.12.0"
+ARG NODE_VERSION="v22.13.0"
 
 # renovate: datasource=github-releases depName=rclone/rclone versioning=semver
 ARG RCLONE_VERSION="v1.68.2"
