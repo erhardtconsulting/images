@@ -13,7 +13,7 @@ ARG NODE_VERSION="v22.13.1"
 ARG RCLONE_VERSION="v1.69.0"
 
 # renovate: datasource=github-releases depName=dotenvx/dotenvx versioning=semver
-ARG DOTENVX_VERSION="v1.32.0"
+ARG DOTENVX_VERSION="v1.34.0"
 
 ADD --chmod=0755 https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.amd64 /usr/local/bin/sops
 
