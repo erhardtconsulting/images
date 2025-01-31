@@ -43,7 +43,9 @@ jobs:
 
   copy-to-old-registry:
     name: Copy to old registry
-    needs: call-build-workflow
+    needs:
+      - get-version
+      - call-build-workflow
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: "nextcloud"
