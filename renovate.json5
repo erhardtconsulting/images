@@ -59,7 +59,7 @@
     // Auto-merge github-releases
     {
       matchDatasources: ['github-releases'],
-      matchPackageNames: [
+      matchDepNames: [
         'aptible/supercronic',
         'dotenvx/dotenvx',
         'getsops/sops',
