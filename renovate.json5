@@ -21,6 +21,13 @@
       matchPackageNames: ['docker.io/library/php'],
       allowedVersions: '8.4.x'
     },
+    // base-python/3.13.Dockerfile - Restrict to python 3.13.x
+    {
+      matchFileNames: ['base-python/3.13.Dockerfile'],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['docker.io/library/python'],
+      allowedVersions: '3.13.x'
+    },
     // nextcloud/Dockerfile - Restrict to php 8.3.x
     {
       matchFileNames: ['nextcloud/Dockerfile'],
@@ -43,6 +50,7 @@
       matchDatasources: ['docker'],
       matchPackageNames: [
         'docker.io/library/php',
+        'docker.io/library/python',
         'docker.io/renovate/renovate'
       ],
       matchUpdateTypes: ['minor', 'patch', 'digest'],
@@ -57,6 +65,7 @@
         'getsops/sops',
         'mlocati/docker-php-extension-installer',
         'nextcloud/server',
+        'python-poetry/poetry',
         'rclone/rclone',
         'TwiN/gatus'
       ],
