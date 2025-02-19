@@ -3,7 +3,9 @@ FROM docker.io/library/python:3.13.2-slim@sha256:ae9f9ac89467077ed1efefb6d904213
 # renovate: datasource=github-releases depName=python-poetry/poetry versioning=semver
 ARG POETRY_VERSION="2.1.1"
 
-ENV PYTHONFAULTHANDLER=1 \
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    PYTHONFAULTHANDLER=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONHASHSEED=random \
     PIP_NO_CACHE_DIR=off \
