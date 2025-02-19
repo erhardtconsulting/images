@@ -35,7 +35,7 @@ jobs:
       image: "base-python"
       dockerfile: "3.13.Dockerfile"
       tag: ${{ needs.get-version.outputs.python }}
-      latest: true
+      latest: false
       push: true
       push-docker: false
       push-quay: false
