@@ -74,8 +74,8 @@
     },
     // Auto-merge github-tags
     {
-      matchDatasources: ['github-releases'],
-      matchPackageNames: [
+      matchDatasources: ['github-tags'],
+      matchDepNames: [
         'nodejs/node',
         'nvm-sh/nvm'
       ],
