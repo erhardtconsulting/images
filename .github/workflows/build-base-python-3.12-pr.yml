@@ -1,0 +1,39 @@
+name: "Python 3.12.x: Build Container Image / Pull Request"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'base-python/3.12.Dockerfile'
+      - '.github/workflows/build-container.yml'
+      - '.github/workflows/build-base-python-3.12-pr.yml'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  get-version:
+    runs-on: ubuntu-24.04
+    outputs:
+      python: ${{ steps.python_version.outputs.PYTHON_VERSION }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Get Python version
+        id: python_version
+        run: |
+          echo "PYTHON_VERSION=$(grep -E '^FROM docker.io/library/python:[0-9]+\.[0-9]+\.[0-9]+' base-python/3.12.Dockerfile | sed -E 's|.*python:([0-9]+\.[0-9]+\.[0-9]+).*|\1|')" >> $GITHUB_OUTPUT
+
+  call-build-workflow:
+    name: Build
+    needs: get-version
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    with:
+      image: "base-python"
+      dockerfile: "3.12.Dockerfile"
+      tag: ${{ needs.get-version.outputs.python }}
+      push: false
+    secrets: inherit

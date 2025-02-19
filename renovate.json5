@@ -21,6 +21,13 @@
       matchPackageNames: ['docker.io/library/php'],
       allowedVersions: '8.4.x'
     },
+    // base-python/3.12.Dockerfile - Restrict to python 3.12.x
+    {
+      matchFileNames: ['base-python/3.12.Dockerfile'],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['docker.io/library/python'],
+      allowedVersions: '3.12.x'
+    },
     // base-python/3.13.Dockerfile - Restrict to python 3.13.x
     {
       matchFileNames: ['base-python/3.13.Dockerfile'],
