@@ -25,6 +25,7 @@ RUN set -eux; \
     curl -sSL https://install.python-poetry.org | python3 -; \
     apt-get -y purge \
       curl; \
+    apt-get -y autoremove; \
     apt-get clean
 
 LABEL org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
