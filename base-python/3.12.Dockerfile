@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.12.9-slim@sha256:34656cd90456349040784165b9decccbcee4de66f3ead0a1168ba893455afd1e
+FROM docker.io/library/python:3.12.9-slim@sha256:dc925719605bf69d6a0efcc170986fda197f040993ec534d49463c5fcee1c29e
 
 # renovate: datasource=github-releases depName=python-poetry/poetry versioning=semver
 ARG POETRY_VERSION="2.1.1"
