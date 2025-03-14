@@ -1,7 +1,7 @@
 name: "Ubuntu 24.04 Runner: Build Container Image / Pull Request"
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:

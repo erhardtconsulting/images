@@ -1,7 +1,7 @@
 name: "PHP 8.4.x: Build Container Image / Pull Request"
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
