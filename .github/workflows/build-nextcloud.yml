@@ -62,7 +62,7 @@ jobs:
           docker pull ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }}
 
       - name: Log in to Docker Hub (as rootlogin)
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
         with:
           registry: docker.io
           username: rootlogin
@@ -76,7 +76,7 @@ jobs:
             ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }}
 
       - name: Log in to Quay.io (as rootlogin)
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
         with:
           registry: quay.io
           username: rootlogin+github
