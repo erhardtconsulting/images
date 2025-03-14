@@ -4,7 +4,7 @@ FROM docker.io/library/ubuntu:24.04@sha256:72297848456d5d37d1262630108ab308d3e9e
 ARG SOPS_VERSION="v3.9.4"
 
 # renovate: datasource=github-tags depName=nvm-sh/nvm versioning=semver
-ARG NVM_VERSION="v0.40.1"
+ARG NVM_VERSION="v0.40.2"
 
 # renovate: datasource=github-tags depName=nodejs/node versioning=semver
 ARG NODE_VERSION="v22.14.0"
