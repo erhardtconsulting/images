@@ -56,10 +56,10 @@
     {
       matchDatasources: ['docker'],
       matchPackageNames: [
-        'docker.io/erhardtconsulting/*',
         'docker.io/library/php',
         'docker.io/library/python',
-        'docker.io/renovate/renovate'
+        'docker.io/renovate/renovate',
+        'ghcr.io/erhardtconsulting/*'
       ],
       matchUpdateTypes: ['minor', 'patch', 'digest'],
       automerge: true
