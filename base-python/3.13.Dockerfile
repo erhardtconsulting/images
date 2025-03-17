@@ -31,7 +31,8 @@ ENV LANG="C.UTF-8" \
 RUN set -eux; \
     apt-get update; \
     apt-get -y install \
-      curl; \
+      curl \
+      tini; \
     curl -sSL https://install.python-poetry.org | python3 -; \
     case "${TARGETARCH}" in \
       'amd64') export ARCH='x86_64' ;; \
