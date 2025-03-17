@@ -69,6 +69,7 @@
       matchDatasources: ['github-releases'],
       matchDepNames: [
         'aptible/supercronic',
+        'astral-sh/uv',
         'dotenvx/dotenvx',
         'getsops/sops',
         'mlocati/docker-php-extension-installer',
