@@ -25,7 +25,9 @@ ENV LANG="C.UTF-8" \
     POETRY_HOME="/usr/local" \
     # UV's configuration
     UV_COMPILE_BYTECODE=1 \
-    UV_NO_CACHE=1
+    UV_NO_CACHE=1 \
+    UV_PYTHON_DOWNLOADS="never" \
+    UV_LINK_MODE="copy"
 
 # Install poetry
 RUN set -eux; \
