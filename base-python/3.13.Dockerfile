@@ -6,7 +6,7 @@ ARG TARGETARCH
 ARG POETRY_VERSION="2.1.1"
 
 # renovate: datasource=github-releases depName=astral-sh/uv versioning=semver
-ARG UV_VERSION="0.6.8"
+ARG UV_VERSION="0.6.9"
 
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
