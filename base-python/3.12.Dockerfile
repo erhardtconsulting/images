@@ -3,7 +3,7 @@ FROM docker.io/library/python:3.12.9-slim@sha256:a866731a6b71c4a194a845d86e06568
 ARG TARGETARCH
 
 # renovate: datasource=github-releases depName=python-poetry/poetry versioning=semver
-ARG POETRY_VERSION="2.1.1"
+ARG POETRY_VERSION="2.1.2"
 
 # renovate: datasource=github-releases depName=astral-sh/uv versioning=semver
 ARG UV_VERSION="0.6.10"
