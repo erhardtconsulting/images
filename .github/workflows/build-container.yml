@@ -121,7 +121,7 @@ jobs:
           name: ${{ env.IMAGE }}-${{ env.TAG }}-${{ env.PLATFORM }}
           path: /tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.PLATFORM }}.tar
           if-no-files-found: error
-          retention-days: 3
+          retention-days: 1
 
       - name: Use Swap | Disable Swap
         if: ${{ inputs.use-swap }}
