@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.13.2-slim@sha256:2999bbd36abf092b32ffecf85c602d61b299de35ef9ebec341e06b0fecba76c6
+FROM docker.io/library/python:3.13.2-slim@sha256:f2821f333099b62a286e6d0da85a89e29207a7b328d6c61660cf54334f5f2785
 
 ARG TARGETARCH
 
