@@ -1,4 +1,4 @@
-FROM docker.io/renovate/renovate:39.248.2@sha256:4d2feb0eba73905bedd12fe5445d430992e7c8985b3547fb407f67190b35f127
+FROM docker.io/renovate/renovate:39.248.3@sha256:e2dca5f416a34d49b0f4428d81160dc193360b5b7ac3682c817eedf3def10527
 
 # Enable root
 USER 0
