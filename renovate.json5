@@ -86,7 +86,8 @@
       matchDatasources: ['github-tags'],
       matchDepNames: [
         'nodejs/node',
-        'nvm-sh/nvm'
+        'nvm-sh/nvm',
+        'FreshRSS/FreshRSS'
       ],
       matchUpdateTypes: ['minor', 'patch'],
       automerge: true
