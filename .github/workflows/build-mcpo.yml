@@ -1,0 +1,41 @@
+name: "MCPO: Build & Publish Container Image"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'mcpo/**'
+      - '.github/workflows/build-container.yml'
+      - '.github/workflows/build-mcpo.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  get-version:
+    runs-on: ubuntu-24.04
+    outputs:
+      mcpo: ${{ steps.mcpo_version.outputs.MCPO_VERSION }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Extract MCPO_VERSION from Dockerfile
+        id: mcpo_version
+        run: |
+          echo "MCPO_VERSION=$(grep -E '^ARG MCPO_VERSION=' mcpo/Dockerfile | cut -d '=' -f 2 | tr -d '"')" >> $GITHUB_OUTPUT
+
+  call-build-workflow:
+    name: Build & Push
+    needs: get-version
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    with:
+      image: "mcpo"
+      dockerfile: "Dockerfile"
+      tag: ${{ needs.get-version.outputs.mcpo }}
+      push: true
+      latest: true
+    secrets: inherit
