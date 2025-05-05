@@ -1,6 +1,8 @@
 FROM docker.io/library/python:3.12.9-slim@sha256:48a11b7ba705fd53bf15248d1f94d36c39549903c5d59edcfa2f3f84126e7b44
 
 ARG TARGETARCH
+ARG APPUSER_UID="1000"
+ARG APPUSER_GID="1000"
 
 # renovate: datasource=github-releases depName=python-poetry/poetry versioning=semver
 ARG POETRY_VERSION="2.1.3"
@@ -33,21 +35,31 @@ ENV LANG="C.UTF-8" \
 RUN set -eux; \
     apt-get update; \
     apt-get -y install \
+      bash \
       curl \
       tini; \
+    # Install poetry
     curl -sSL https://install.python-poetry.org | python3 -; \
     case "${TARGETARCH}" in \
       'amd64') export ARCH='x86_64' ;; \
       'arm64') export ARCH='aarch64' ;; \
     esac; \
+    # Install uv
     curl -fsSL "https://github.com/astral-sh/uv/releases/download/${UV_VERSION}/uv-${ARCH}-unknown-linux-gnu.tar.gz" \
       | tar xzf - -C /usr/local/bin --strip-components=1; \
     uv --version; \
+    # Cleanup
     apt-get -y purge \
       curl; \
     apt-get -y autoremove; \
-    apt-get clean
+    apt-get clean; \
+    # Create unprivileged user
+    groupadd -g ${APPUSER_GID} appgroup && \
+    useradd -u ${APPUSER_UID} -g appgroup -s /bin/bash -m appuser
 
 LABEL org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
 LABEL org.opencontainers.image.description="Python 3.12 base image with Poetry and uv installed"
 LABEL org.opencontainers.image.licenses="MIT"
+
+# Set tini as entrypoing
+ENTRYPOINT ["/usr/bin/tini", "--"]
