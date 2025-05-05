@@ -36,4 +36,6 @@ jobs:
       dockerfile: "3.12.Dockerfile"
       tag: ${{ needs.get-version.outputs.python }}
       push: false
+      push-docker: false
+      push-quay: false
     secrets: inherit

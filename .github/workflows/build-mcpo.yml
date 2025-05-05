@@ -37,5 +37,7 @@ jobs:
       dockerfile: "Dockerfile"
       tag: ${{ needs.get-version.outputs.mcpo }}
       push: true
+      push-docker: false
+      push-quay: true
       latest: true
     secrets: inherit

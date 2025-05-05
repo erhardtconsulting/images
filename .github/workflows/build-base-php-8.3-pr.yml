@@ -36,4 +36,6 @@ jobs:
       dockerfile: "8.3.Dockerfile"
       tag: ${{ needs.get-version.outputs.php }}
       push: false
+      push-docker: false
+      push-quay: false
     secrets: inherit

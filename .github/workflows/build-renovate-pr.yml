@@ -36,4 +36,6 @@ jobs:
       dockerfile: "Dockerfile"
       tag: ${{ needs.get-version.outputs.renovate }}
       push: false
+      push-docker: false
+      push-quay: false
     secrets: inherit

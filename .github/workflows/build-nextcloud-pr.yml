@@ -37,4 +37,6 @@ jobs:
       dockerfile: "Dockerfile"
       tag: ${{ needs.get-version.outputs.nextcloud }}
       push: false
+      push-docker: false
+      push-quay: false
     secrets: inherit
