@@ -42,6 +42,13 @@
       matchPackageNames: ['ghcr.io/erhardtconsulting/base-php'],
       allowedVersions: '8.3.x'
     },
+    // mcpo/Dockerfile - Restrict to python 3.12.x
+    {
+      matchFileNames: ['mcpo/Dockerfile'],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['ghcr.io/erhardtconsulting/base-python'],
+      allowedVersions: '3.12.x'
+    },
     /*
       Auto-merge configuration
     */
