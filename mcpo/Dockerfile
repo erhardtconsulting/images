@@ -39,6 +39,8 @@ RUN chown -R appuser:appgroup /app
 # Set user
 USER appuser:appgroup
 
+WORKDIR /home/appuser
+
 EXPOSE $PORT
 
 CMD ["/docker-run.sh"]
