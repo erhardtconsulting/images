@@ -55,7 +55,7 @@ RUN set -eux; \
     apt-get clean; \
     # Create unprivileged user
     groupadd -g ${APPUSER_GID} appgroup && \
-    useradd -u ${APPUSER_UID} -g appgroup -s /bin/bash -d /app -m appuser
+    useradd -u ${APPUSER_UID} -g appgroup -s /bin/bash -m appuser
 
 LABEL org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
 LABEL org.opencontainers.image.description="Python 3.13 base image with Poetry and uv installed"
