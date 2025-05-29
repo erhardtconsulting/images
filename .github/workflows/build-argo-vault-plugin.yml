@@ -38,5 +38,7 @@ jobs:
       dockerfile: "Dockerfile"
       tag: ${{ needs.get-version.outputs.argocd-vault-plugin }}
       push: true
+      push-docker: false
+      push-quay: false
       latest: true
     secrets: inherit
