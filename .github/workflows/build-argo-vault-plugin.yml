@@ -18,13 +18,13 @@ jobs:
   get-version:
     runs-on: ubuntu-24.04
     outputs:
-      argocd-vault-plugin: ${{ steps.argocd-vault-plugin.outputs.AVP_VERSION }}
+      argocd-vault-plugin: ${{ steps.argocd-vault-plugin-version.outputs.AVP_VERSION }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Extract AVP_VERSION from Dockerfile
-        id: argocd_vault_plugin_version
+        id: argocd-vault-plugin-version
         run: |
           AVP_VERSION=$(grep -E '^ARG AVP_VERSION=' argocd-vault-plugin/Dockerfile | cut -d '=' -f 2 | tr -d '"')
           echo "AVP_VERSION=$AVP_VERSION" >> $GITHUB_OUTPUT
