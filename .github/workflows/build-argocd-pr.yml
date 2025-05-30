@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'argocd-vault-plugin/**'
+      - '../../argocd/**'
       - '.github/workflows/build-argo-vault-plugin-pr.yml'
       - '.github/workflows/build-container.yml'
 
