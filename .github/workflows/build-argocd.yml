@@ -1,12 +1,12 @@
-name: "ArgoCD Vault Plugin: Build & Publish Container Image"
+name: "ArgoCD: Build & Publish Container Image"
 
 on:
   push:
     branches:
       - main
     paths:
-      - '../../argocd/**'
-      - '.github/workflows/build-argo-vault-plugin.yml'
+      - 'argocd/**'
+      - '.github/workflows/build-argocd.yml'
       - '.github/workflows/build-container.yml'
   workflow_dispatch:
 
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - name: Extract AVP_VERSION from Dockerfile
+      - name: Extract ARGOCD_VERSION from Dockerfile
         id: argocd-version
         run: |
           ARGOCD_VERSION=$(grep -E '^FROM quay.io/argoproj/argocd:v[0-9]+\.[0-9]+\.[0-9]+' argocd/Dockerfile | sed -E 's|.*argocd:v([0-9]+\.[0-9]+\.[0-9]+).*|\1|')

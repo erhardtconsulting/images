@@ -1,12 +1,12 @@
-name: "ArgoCD Vault Plugin: Build Container Image / Pull Request"
+name: "ArgoCD: Build Container Image / Pull Request"
 
 on:
   pull_request:
     branches:
       - main
     paths:
-      - '../../argocd/**'
-      - '.github/workflows/build-argo-vault-plugin-pr.yml'
+      - 'argocd/**'
+      - '.github/workflows/build-argocd-pr.yml'
       - '.github/workflows/build-container.yml'
 
 permissions:
@@ -17,25 +17,25 @@ jobs:
   get-version:
     runs-on: ubuntu-24.04
     outputs:
-      argocd-vault-plugin: ${{ steps.argocd-vault-plugin.outputs.AVP_VERSION }}
+      argocd: ${{ steps.argocd-version.outputs.ARGOCD_VERSION }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
-      - name: Extract AVP_VERSION from Dockerfile
-        id: argocd_vault_plugin_version
+      - name: Extract ARGOCD_VERSION from Dockerfile
+        id: argocd-version
         run: |
-          AVP_VERSION=$(grep -E '^ARG AVP_VERSION=' argocd-vault-plugin/Dockerfile | cut -d '=' -f 2 | tr -d '"')
-          echo "AVP_VERSION=$AVP_VERSION" >> $GITHUB_OUTPUT
+          ARGOCD_VERSION=$(grep -E '^FROM quay.io/argoproj/argocd:v[0-9]+\.[0-9]+\.[0-9]+' argocd/Dockerfile | sed -E 's|.*argocd:v([0-9]+\.[0-9]+\.[0-9]+).*|\1|')
+          echo "ARGOCD_VERSION=$ARGOCD_VERSION" >> $GITHUB_OUTPUT
 
   call-build-workflow:
     name: Build & Push
     needs: get-version
     uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
     with:
-      image: "argocd-vault-plugin"
+      image: "argocd"
       dockerfile: "Dockerfile"
-      tag: ${{ needs.get-version.outputs.argocd-vault-plugin }}
+      tag: ${{ needs.get-version.outputs.argocd }}
       push: false
       push-docker: false
       push-quay: false
