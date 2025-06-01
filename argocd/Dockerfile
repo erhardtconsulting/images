@@ -50,8 +50,8 @@ RUN set -eux; \
     # enable wrapper
     ln -sf ${HELM_PLUGINS}/helm-secrets/scripts/wrapper/helm.sh /usr/local/bin/helm
 
-USER argocd
+USER ${ARGOCD_USER_ID}
 
 LABEL org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
-LABEL org.opencontainers.image.description="ArgoCD with ksops integrated"
+LABEL org.opencontainers.image.description="ArgoCD with ksops and helm-secrets integrated"
 LABEL org.opencontainers.image.licenses="MIT"
