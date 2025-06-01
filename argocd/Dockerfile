@@ -23,8 +23,7 @@ ENV XDG_CONFIG_HOME=/.config \
     HELM_SECRETS_CURL_PATH="/usr/bin/curl" \
     HELM_SECRETS_SOPS_PATH="${TOOLS_FOLDER}/bin/sops" \
     HELM_SECRETS_VALS_PATH="${TOOLS_FOLDER}/bin/vals" \
-    HELM_SECRETS_KUBECTL_PATH="${TOOLS_FOLDER}/bin/kubectl" \
-    PATH="${TOOLS_FOLDER}:${PATH}"
+    HELM_SECRETS_KUBECTL_PATH="${TOOLS_FOLDER}/bin/kubectl"
 
 ADD --chmod=0755 https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.${TARGETARCH} /usr/local/bin/sops
 
@@ -53,6 +52,8 @@ RUN set -eux; \
     ln -sf ${HELM_PLUGINS}/helm-secrets/scripts/wrapper/helm.sh ${TOOLS_FOLDER}/bin/helm
 
 USER ${ARGOCD_USER_ID}
+
+ENV PATH="${TOOLS_FOLDER}/bin:${PATH}"
 
 LABEL org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
 LABEL org.opencontainers.image.description="ArgoCD with ksops and helm-secrets integrated"
