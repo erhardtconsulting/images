@@ -26,7 +26,8 @@ ENV HELM_PLUGINS="${TOOLS_FOLDER}/helm-plugins" \
     HELM_SECRETS_VALS_PATH="${TOOLS_FOLDER}/bin/vals" \
     HELM_SECRETS_KUBECTL_PATH="${TOOLS_FOLDER}/bin/kubectl"
 
-ADD --chmod=0755 https://github.com/getsops/sops/releases/download/${SOPS_VERSION}/sops-${SOPS_VERSION}.linux.${TARGETARCH} /usr/local/bin/sops
+# install sops
+ADD --chmod=0755 https://github.com/getsops/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux.${TARGETARCH} ${TOOLS_FOLDER}/bin/sops
 
 COPY --from=ksops-builder /usr/local/bin/kustomize /usr/local/bin/kustomize
 COPY --from=ksops-builder /usr/local/bin/ksops /usr/local/bin/ksops
@@ -43,9 +44,6 @@ RUN set -eux; \
     # install kubectl
     curl -fLo ${TOOLS_FOLDER}/bin/kubectl "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/${GO_ARCH}/kubectl"; \
     chmod +x ${TOOLS_FOLDER}/bin/kubectl; \
-    # install sops \
-    curl -fLo ${TOOLS_FOLDER}/bin/sops "https://github.com/getsops/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux.${GO_ARCH}"; \
-    chmod +x ${TOOLS_FOLDER}/bin/sops; \
     # install vals
     curl -fL "https://github.com/helmfile/vals/releases/download/v${VALS_VERSION}/vals_${VALS_VERSION}_linux_${GO_ARCH}.tar.gz" | tar -xvz -C /tmp; \
     cp /tmp/vals ${TOOLS_FOLDER}/bin/vals; \
