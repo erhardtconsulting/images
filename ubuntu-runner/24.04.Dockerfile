@@ -10,7 +10,7 @@ ARG NVM_VERSION="v0.40.3"
 ARG NODE_VERSION="v22.15.1"
 
 # renovate: datasource=github-releases depName=rclone/rclone versioning=semver
-ARG RCLONE_VERSION="v1.69.2"
+ARG RCLONE_VERSION="v1.69.3"
 
 # renovate: datasource=github-releases depName=dotenvx/dotenvx versioning=semver
 ARG DOTENVX_VERSION="v1.44.1"
