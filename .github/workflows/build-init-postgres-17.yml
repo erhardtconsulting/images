@@ -36,6 +36,7 @@ jobs:
       image: "init-postgres"
       dockerfile: "pg17.Dockerfile"
       tag: ${{ needs.get-version.outputs.postgresql }}
+      latest: true
       push: true
       use-swap: true
     secrets: inherit

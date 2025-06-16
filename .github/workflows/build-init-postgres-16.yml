@@ -37,6 +37,6 @@ jobs:
       dockerfile: "pg16.Dockerfile"
       tag: ${{ needs.get-version.outputs.postgresql }}
       push: true
-      latest: true
+      latest: false
       use-swap: true
     secrets: inherit
