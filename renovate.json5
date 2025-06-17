@@ -1,7 +1,7 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
-    'github>erhardtconsulting/renovate-rules:default'
+    'github>erhardtconsulting/renovate-rules:default',
   ],
   packageRules: [
     /*
@@ -12,42 +12,42 @@
       matchFileNames: ['base-php/8.3.Dockerfile'],
       matchDatasources: ['docker'],
       matchPackageNames: ['docker.io/library/php'],
-      allowedVersions: '8.3.x'
+      allowedVersions: '8.3.x',
     },
     // base-php/8.4.Dockerfile - Restrict to php 8.4.x
     {
       matchFileNames: ['base-php/8.4.Dockerfile'],
       matchDatasources: ['docker'],
       matchPackageNames: ['docker.io/library/php'],
-      allowedVersions: '8.4.x'
+      allowedVersions: '8.4.x',
     },
     // base-python/3.12.Dockerfile - Restrict to python 3.12.x
     {
       matchFileNames: ['base-python/3.12.Dockerfile'],
       matchDatasources: ['docker'],
       matchPackageNames: ['docker.io/library/python'],
-      allowedVersions: '3.12.x'
+      allowedVersions: '3.12.x',
     },
     // base-python/3.13.Dockerfile - Restrict to python 3.13.x
     {
       matchFileNames: ['base-python/3.13.Dockerfile'],
       matchDatasources: ['docker'],
       matchPackageNames: ['docker.io/library/python'],
-      allowedVersions: '3.13.x'
+      allowedVersions: '3.13.x',
     },
     // nextcloud/Dockerfile - Restrict to php 8.3.x
     {
       matchFileNames: ['nextcloud/Dockerfile'],
       matchDatasources: ['docker'],
       matchPackageNames: ['ghcr.io/erhardtconsulting/base-php'],
-      allowedVersions: '8.3.x'
+      allowedVersions: '8.3.x',
     },
     // mcpo/Dockerfile - Restrict to python 3.12.x
     {
       matchFileNames: ['mcpo/Dockerfile'],
       matchDatasources: ['docker'],
       matchPackageNames: ['ghcr.io/erhardtconsulting/base-python'],
-      allowedVersions: '3.12.x'
+      allowedVersions: '3.12.x',
     },
     /*
       Auto-merge configuration
@@ -57,7 +57,7 @@
       matchDatasources: ['docker'],
       matchPackageNames: ['docker.io/library/debian'],
       matchUpdateTypes: ['digest'],
-      automerge: true
+      automerge: true,
     },
     // Auto-merge docker minor, patch, digest
     {
@@ -66,10 +66,11 @@
         'docker.io/library/php',
         'docker.io/library/python',
         'docker.io/renovate/renovate',
-        'ghcr.io/erhardtconsulting/*'
+        'ghcr.io/erhardtconsulting/*',
+        'quay.io/argoproj/argocd',
       ],
       matchUpdateTypes: ['minor', 'patch', 'digest'],
-      automerge: true
+      automerge: true,
     },
     // Auto-merge github-releases
     {
@@ -83,10 +84,10 @@
         'nextcloud/server',
         'python-poetry/poetry',
         'rclone/rclone',
-        'TwiN/gatus'
+        'TwiN/gatus',
       ],
       matchUpdateTypes: ['minor', 'patch'],
-      automerge: true
+      automerge: true,
     },
     // Auto-merge github-tags
     {
@@ -94,10 +95,10 @@
       matchDepNames: [
         'nodejs/node',
         'nvm-sh/nvm',
-        'FreshRSS/FreshRSS'
+        'FreshRSS/FreshRSS',
       ],
       matchUpdateTypes: ['minor', 'patch'],
-      automerge: true
+      automerge: true,
     }
   ]
 }
