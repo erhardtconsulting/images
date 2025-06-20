@@ -1,7 +1,7 @@
 FROM docker.io/library/php:8.4.2-fpm@sha256:e8c1afd3cc12230906106f482852250f461e588ffaaaa8d73ef3d6f78c727565
 
 # renovate: datasource=github-releases depName=aptible/supercronic versioning=semver
-ARG SUPERCRONIC_VERSION="v0.2.33"
+ARG SUPERCRONIC_VERSION="v0.2.34"
 # renovate: datasource=github-releases depName=mlocati/docker-php-extension-installer versioning=semver
 ARG INSTALL_PHP_EXTENSIONS_VERSION="2.8.1"
 
