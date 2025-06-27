@@ -8,7 +8,7 @@ ARG APPUSER_GID="1000"
 ARG POETRY_VERSION="2.1.3"
 
 # renovate: datasource=github-releases depName=astral-sh/uv versioning=semver
-ARG UV_VERSION="0.7.15"
+ARG UV_VERSION="0.7.16"
 
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
