@@ -2,7 +2,7 @@
 FROM docker.io/library/golang:1.24.4-bookworm@sha256:c83619bb18b0207412fffdaf310f57ee3dd02f586ac7a5b44b9c36a29a9d5122 AS builder
 
 # renovate: datasource=github-releases depName=TwiN/gatus versioning=semver
-ARG GATUS_VERSION="5.18.1"
+ARG GATUS_VERSION="5.19.0"
 
 RUN set -eux; \
     mkdir -p /app; \
