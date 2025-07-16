@@ -1,4 +1,4 @@
-FROM docker.io/library/ubuntu:24.04@sha256:b59d21599a2b151e23eea5f6602f4af4d7d31c4e236d22bf0b62b86d2e386b8f
+FROM docker.io/library/ubuntu:24.04@sha256:c4570d2f4665d5d118ae29fb494dee4f8db8fcfaee0e37a2e19b827f399070d3
 
 # renovate: datasource=github-releases depName=getsops/sops versioning=semver
 ARG SOPS_VERSION="v3.10.2"
