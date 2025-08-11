@@ -1,7 +1,7 @@
 FROM ghcr.io/erhardtconsulting/base-python:3.12.9@sha256:4a205303c729304570c7a9d9a18f1d869f72a9b4b280daa52b0f67515817be21
 
 # renovate: datasource=pypi depName=mcpo versioning=semver
-ARG MCPO_VERSION="0.0.16"
+ARG MCPO_VERSION="0.0.17"
 
 # Set global virtual env
 ENV VIRTUAL_ENV=/app/.venv \
