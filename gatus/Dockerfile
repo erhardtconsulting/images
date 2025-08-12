@@ -13,7 +13,7 @@ RUN set -eux; \
       && CGO_ENABLED=1 GOOS=linux go build -a -o gatus .
 
 # app container
-FROM docker.io/library/debian:bookworm-slim@sha256:2424c1850714a4d94666ec928e24d86de958646737b1d113f5b2207be44d37d8
+FROM docker.io/library/debian:bookworm-slim@sha256:135c31f331d2c233a0035301460624091facfe097bdc3b3065f59ede9ad2f937
 
 # set environment
 ENV TZ="Etc/UTC"
