@@ -4,10 +4,13 @@ FROM quay.io/argoproj/argocd:v3.1.0@sha256:51abf85651c33cfd0645d72e0877eeeae187b
 # renovate: datasource=github-releases depName=getsops/sops versioning=semver
 ARG SOPS_VERSION="3.10.2"
 
-ARG KUBECTL_VERSION=1.30.2
+ARG KUBECTL_VERSION=1.33.3
 
-ARG VALS_VERSION=0.41.1
-ARG HELM_SECRETS_VERSION=4.6.0
+# renovate: datasource=github-releases depName=helmfile/vals versioning=semver
+ARG VALS_VERSION=0.42.0
+
+# renovate: datasource=github-releases depName=jkroepke/helm-secrets versioning=semver
+ARG HELM_SECRETS_VERSION=4.6.5
 
 ARG TARGETARCH
 
