@@ -1,0 +1,43 @@
+name: "Node-RED: Build & Push Container Image"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'nodered/Dockerfile'
+      - 'nodered/root/**'
+      - '.github/workflows/build-container.yml'
+      - '.github/workflows/build-nodered.yml'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  get-version:
+    runs-on: ubuntu-24.04
+    outputs:
+      nodered: ${{ steps.nodered_version.outputs.NODERED_VERSION }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+
+      - name: Get nodered version
+        id: nodered_version
+        run: |
+          echo "NODERED_VERSION=$(grep -E '^FROM docker.io/nodered/node-red:[0-9]+\.[0-9]+\.[0-9]+' node-red/Dockerfile | cut -d ':' -f2 | cut -d '@' -f1)" >> $GITHUB_OUTPUT
+
+  call-build-workflow:
+    name: Build & Push
+    needs: get-version
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    with:
+      image: "nodered"
+      dockerfile: "Dockerfile"
+      tag: ${{ needs.get-version.outputs.nodered }}
+      push: true
+      push-quay: false
+      push-docker: false
+      latest: true
+    secrets: inherit
