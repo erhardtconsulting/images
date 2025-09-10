@@ -51,26 +51,10 @@ RUN apt-get update && apt-get install -y build-essential python3 python-is-pytho
 
 #### Stage RELEASE #####################################################################################################
 FROM base AS release
-ARG BUILD_DATE
-ARG BUILD_VERSION
-ARG BUILD_REF
-ARG NODE_RED_VERSION
-ARG ARCH
-ARG TAG_SUFFIX=default
 
-LABEL org.label-schema.build-date=${BUILD_DATE} \
-    org.label-schema.docker.dockerfile=".docker/Dockerfile.debian" \
-    org.label-schema.license="Apache-2.0" \
-    org.label-schema.name="Node-RED" \
-    org.label-schema.version=${BUILD_VERSION} \
-    org.label-schema.description="Low-code programming for event-driven applications." \
-    org.label-schema.url="https://nodered.org" \
-    org.label-schema.vcs-ref=${BUILD_REF} \
-    org.label-schema.vcs-type="Git" \
-    org.label-schema.vcs-url="https://github.com/node-red/node-red-docker" \
-    org.opencontainers.image.source="https://github.com/node-red/node-red-docker" \
-    org.label-schema.arch=${ARCH} \
-    authors="Dave Conway-Jones, Nick O'Leary, James Thomas, Raymond Mouthaan"
+LABEL org.opencontainers.image.description="Extended & customized Node-RED image" \
+      org.opencontainers.image.authors="Simon Erhardt <simon@erhardt.consulting>" \
+      org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
 
 COPY --from=build /usr/src/node-red/prod_node_modules ./node_modules
 
