@@ -26,7 +26,7 @@ jobs:
       - name: Get nodered version
         id: nodered_version
         run: |
-          echo "NODERED_VERSION=$(grep -E '^FROM docker.io/nodered/node-red:[0-9]+\.[0-9]+\.[0-9]+' node-red/Dockerfile | cut -d ':' -f2 | cut -d '@' -f1)" >> $GITHUB_OUTPUT
+          echo "NODERED_VERSION=$(grep -E '^FROM docker.io/nodered/node-red:[0-9]+\.[0-9]+\.[0-9]+' nodered/Dockerfile | cut -d ':' -f2 | cut -d '@' -f1)" >> $GITHUB_OUTPUT
 
   call-build-workflow:
     name: Build & Push
