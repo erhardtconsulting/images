@@ -5,7 +5,7 @@ ARG APPUSER_UID="1000"
 ARG APPUSER_GID="1000"
 
 # renovate: datasource=github-releases depName=python-poetry/poetry versioning=semver
-ARG POETRY_VERSION="2.1.4"
+ARG POETRY_VERSION="2.2.0"
 
 # renovate: datasource=github-releases depName=astral-sh/uv versioning=semver
 ARG UV_VERSION="0.8.17"
