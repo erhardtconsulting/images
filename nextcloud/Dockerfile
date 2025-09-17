@@ -4,7 +4,7 @@ FROM ghcr.io/erhardtconsulting/base-php:8.3.13@sha256:4421b66c9b30aa350e2cd4ce75
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 
 # renovate: datasource=github-releases depName=nextcloud/server versioning=semver
-ARG NEXTCLOUD_VERSION="31.0.8"
+ARG NEXTCLOUD_VERSION="31.0.9"
 # renovate: datasource=github-tags depName=Imagick/imagick versioning=semver
 ARG IMAGICK_VERSION="3.8.0"
 
