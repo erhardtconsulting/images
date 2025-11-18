@@ -1,5 +1,5 @@
 #### Stage BASE ########################################################################################################
-FROM docker.io/library/node:lts-trixie@sha256:fc5e389d729715b222aa179c29c054d9fe497966cb1478397df378d28986ef5e AS base
+FROM docker.io/library/node:lts-trixie@sha256:1501d5fd51032aa10701a7dcc9e6c72ab1e611a033ffcf08b6d5882e9165f63e AS base
 
 # Copy scripts
 COPY scripts/*.sh /tmp/
