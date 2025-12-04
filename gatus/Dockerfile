@@ -1,5 +1,5 @@
 # build container
-FROM docker.io/library/golang:1.24.6-bookworm@sha256:ab1d1823abb55a9504d2e3e003b75b36dbeb1cbcc4c92593d85a84ee46becc6c AS builder
+FROM docker.io/library/golang:1.25.5-bookworm@sha256:5117d68695f57faa6c2b3a49a6f3187ec1f66c75d5b080e4360bfe4c1ada398c AS builder
 
 # renovate: datasource=github-releases depName=TwiN/gatus versioning=semver
 ARG GATUS_VERSION="5.33.0"
