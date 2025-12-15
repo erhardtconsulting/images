@@ -21,7 +21,7 @@ RUN set -eux; \
     npm -v
 
 # Copy root
-COPY root/ /
+COPY root /
 
 # Update path
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"

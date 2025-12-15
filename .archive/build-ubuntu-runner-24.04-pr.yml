@@ -7,7 +7,7 @@ on:
     paths:
       - 'ubuntu-runner/24.04.Dockerfile'
       - '.github/workflows/build-container.yml'
-      - '.github/workflows/build-ubuntu-runner-24.04-pr.yml'
+      - 'build-ubuntu-runner-24.04-pr.yml'
 
 permissions:
   contents: read

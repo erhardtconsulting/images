@@ -1,13 +1,14 @@
-name: "MCPO: Build Docker Image / Pull Request"
+name: "MCPO: Build & Publish Container Image"
 
 on:
-  pull_request:
+  push:
     branches:
       - main
     paths:
-      - 'mcpo/**'
+      - '../../.archive/mcpo/**'
       - '.github/workflows/build-container.yml'
-      - '.github/workflows/build-mcpo-pr.yml'
+      - 'build-mcpo.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -35,7 +36,8 @@ jobs:
       image: "mcpo"
       dockerfile: "Dockerfile"
       tag: ${{ needs.get-version.outputs.mcpo }}
-      push: false
+      push: true
       push-docker: false
-      push-quay: false
+      push-quay: true
+      latest: true
     secrets: inherit
