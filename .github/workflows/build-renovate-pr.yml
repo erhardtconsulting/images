@@ -26,7 +26,7 @@ jobs:
       - name: Get renovate version
         id: renovate_version
         run: |
-          echo "RENOVATE_VERSION=$(grep -E '^FROM docker.io/renovate/renovate:[0-9]+\.[0-9]+\.[0-9]+' renovate/Dockerfile | cut -d ':' -f 2 | tr -d '@sha256')" >> $GITHUB_OUTPUT
+          echo "RENOVATE_VERSION=$(grep -E '^FROM docker.io/renovate/renovate:[0-9]+\.[0-9]+\.[0-9]+' renovate/Dockerfile | cut -d ':' -f 2 | cut -d '@' -f 1)" >> $GITHUB_OUTPUT
   call-build-workflow:
     name: Build
     needs: get-version
