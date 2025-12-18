@@ -1,4 +1,4 @@
-FROM ghcr.io/erhardtconsulting/base-python:3.12.9@sha256:59b7a2290aa02ea75cc0237fcb4c1201243cc711eaa4b955bed42330378d8a68
+FROM ghcr.io/erhardtconsulting/base-python:3.13.2@sha256:8ed70f252ed00063253e4f01a0846303987a61a1c3a2395b9b32f75ae3c6a024
 
 # renovate: datasource=pypi depName=mcpo versioning=semver
 ARG MCPO_VERSION="0.0.17"
