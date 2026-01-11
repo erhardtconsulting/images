@@ -11,6 +11,7 @@ ARG IMAGICK_VERSION="3.8.1"
 RUN set -eux; \
     apt-get update; \
     apt-get -y install \
+      ca-certificates \
       gettext \
       gnupg; \
     /usr/local/bin/install-php-extensions \
