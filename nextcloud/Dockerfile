@@ -1,4 +1,4 @@
-FROM ghcr.io/erhardtconsulting/base-php:8.3.13@sha256:59dbc4665289f4076a5d27e880eadd6bdc814aae47b8ef130105cc10512a0a1c
+FROM ghcr.io/erhardtconsulting/base-php:8.3.13@sha256:7cc19e43736cf2143d8730509fee734c622da778b183a6f31cbe6220c2309f84
 
 # Nextcloud gpg key for verification
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
