@@ -1,5 +1,5 @@
 FROM quay.io/viaductoss/ksops:4.3.3@sha256:6b5ec4b6144307f78bcddffd8f09020482836eee34cf77bf4ce8614b0452a73c as ksops-builder
-FROM quay.io/argoproj/argocd:v3.3.5@sha256:b2ddbd5fa319b6f3f2edba9a04b243a9357b283cf39e1952c9640e156f0995f6
+FROM quay.io/argoproj/argocd:v3.4.1@sha256:097c922fb910e6bb0278b0e26382f88de4fa5c966564111bddd334051b0e63d7
 
 # renovate: datasource=github-releases depName=getsops/sops versioning=semver
 ARG SOPS_VERSION="3.12.2"
