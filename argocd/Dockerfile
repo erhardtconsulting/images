@@ -2,7 +2,7 @@ FROM quay.io/viaductoss/ksops:4.3.3@sha256:6b5ec4b6144307f78bcddffd8f09020482836
 FROM quay.io/argoproj/argocd:v3.4.2@sha256:c612d570cb6d6ff29afb72932c1bfe98a1ecc234df50f8ea4873fb7066e760fc
 
 # renovate: datasource=github-releases depName=getsops/sops versioning=semver
-ARG SOPS_VERSION="3.13.0"
+ARG SOPS_VERSION="3.13.1"
 
 ARG KUBECTL_VERSION=1.33.3
 
