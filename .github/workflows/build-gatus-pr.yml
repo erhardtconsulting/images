@@ -31,7 +31,7 @@ jobs:
   call-build-workflow:
     name: Build
     needs: get-version
-    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@4c246587aad1fe6053a177b95e8d308f829eca71 # main
     with:
       image: "gatus"
       dockerfile: "Dockerfile"
