@@ -210,7 +210,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push image to ghcr
-        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
+        uses: redhat-actions/push-to-registry@5860fc963bf8f2b3221773a023141612f010c469 # v2
         with:
           registry: ghcr.io/erhardtconsulting
           image: ${{ env.IMAGE }}
@@ -218,7 +218,7 @@ jobs:
 
       - name: Push image to quay.io
         if: ${{ inputs.push-quay }}
-        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
+        uses: redhat-actions/push-to-registry@5860fc963bf8f2b3221773a023141612f010c469 # v2
         with:
           registry: quay.io/erhardtconsulting
           image: ${{ env.IMAGE }}
@@ -226,7 +226,7 @@ jobs:
 
       - name: Push image to docker.io
         if: ${{ inputs.push-docker }}
-        uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
+        uses: redhat-actions/push-to-registry@5860fc963bf8f2b3221773a023141612f010c469 # v2
         with:
           registry: docker.io
           image: erhardtconsulting/${{ env.IMAGE }}
