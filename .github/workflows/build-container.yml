@@ -101,7 +101,7 @@ jobs:
           free -h
 
       - name: Build image with buildah
-        uses: redhat-actions/buildah-build@9dc2ade9b5db229966b5025ae266311e12f349c4 # v2
+        uses: redhat-actions/buildah-build@3a51aade9afa17e5c78256bcbe2e1ee08c7b995b # v3
         with:
           image: erhardtconsulting/${{ env.IMAGE }}
           tags: ${{ env.TAG }}-${{ env.PLATFORM }}
