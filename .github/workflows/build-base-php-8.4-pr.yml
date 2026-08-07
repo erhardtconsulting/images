@@ -30,7 +30,7 @@ jobs:
   call-build-workflow:
     name: Build
     needs: get-version
-    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@1e630fe2fc769293ec4e7eaf1f744d8331897619 # main
     with:
       image: "base-php"
       dockerfile: "8.4.Dockerfile"
