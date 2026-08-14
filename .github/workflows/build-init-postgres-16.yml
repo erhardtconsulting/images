@@ -31,7 +31,7 @@ jobs:
   call-build-workflow:
     name: Build & Push
     needs: get-version
-    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@9fd594e49473d021155d4ca65de3af4d25fa277d # main
     with:
       image: "init-postgres"
       dockerfile: "pg16.Dockerfile"
