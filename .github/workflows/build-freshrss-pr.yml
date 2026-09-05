@@ -31,7 +31,7 @@ jobs:
   call-build-workflow:
     name: Build & Push
     needs: get-version
-    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@ea5e3101575c020574dcbdb75c1d7efc9e411e21 # main
     with:
       image: "freshrss"
       dockerfile: "Dockerfile"
