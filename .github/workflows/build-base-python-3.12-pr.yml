@@ -30,7 +30,7 @@ jobs:
   call-build-workflow:
     name: Build
     needs: get-version
-    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@d9b9780da0566e713338cf385e1d1e418628b3aa # main
     with:
       image: "base-python"
       dockerfile: "3.12.Dockerfile"
