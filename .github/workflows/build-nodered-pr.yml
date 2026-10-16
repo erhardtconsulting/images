@@ -31,7 +31,7 @@ jobs:
   call-build-workflow:
     name: Build
     needs: get-version
-    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@c566126ed9bf3ac3b81d3ef762cc4a8ee469bf87 # main
     with:
       image: "nodered"
       dockerfile: "Dockerfile"
