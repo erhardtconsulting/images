@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   get-version:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     outputs:
       python: ${{ steps.python_version.outputs.PYTHON_VERSION }}
     steps:
