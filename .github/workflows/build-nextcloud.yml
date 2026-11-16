@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   get-version:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     outputs:
       nextcloud: ${{ steps.nextcloud_version.outputs.NEXTCLOUD_VERSION }}
     steps:
