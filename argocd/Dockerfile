@@ -1,16 +1,16 @@
-FROM quay.io/viaductoss/ksops:4.3.3@sha256:6b5ec4b6144307f78bcddffd8f09020482836eee34cf77bf4ce8614b0452a73c as ksops-builder
+FROM quay.io/viaductoss/ksops:v4.5.1@sha256:4def9fdd4e2f850265740ebe9592c5455d19b76891e88e602df8b52d74b95334 as ksops-builder
 FROM quay.io/argoproj/argocd:v3.6.1@sha256:296e3d74f449b2ce45265613fcb68c18ed7366488360c8ea32f5f2a93d2e5c54
 
 # renovate: datasource=github-releases depName=getsops/sops versioning=semver
 ARG SOPS_VERSION="3.13.3"
 
-ARG KUBECTL_VERSION=1.33.3
+ARG KUBECTL_VERSION=1.37.1
 
 # renovate: datasource=github-releases depName=helmfile/vals versioning=semver
-ARG VALS_VERSION=0.42.0
+ARG VALS_VERSION=0.51.1
 
 # renovate: datasource=github-releases depName=jkroepke/helm-secrets versioning=semver
-ARG HELM_SECRETS_VERSION=4.6.5
+ARG HELM_SECRETS_VERSION=4.7.11
 
 ARG TARGETARCH
 
