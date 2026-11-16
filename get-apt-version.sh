@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# URL des Debian-Bookworm-Repositories
+# URL des Debian-Paketrepositories
 REPO_URL="$1"
 DISTRIBUTION="$2"
 PACKAGE="$3"

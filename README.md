@@ -16,6 +16,12 @@ Security is paramount in containerized environments. Running containers with roo
 
 [Nextcloud](https://nextcloud.com/) is a self-hosted platform that provides file storage, collaboration tools, and synchronization services. It allows users to store and share files, calendars, and contacts, and integrates with many third-party apps. Our rootless Nextcloud Docker image provides a secure way to deploy this powerful suite without root privileges, ideal for Kubernetes environments where security is critical.
 
+## Container Builds
+
+The reusable workflow in `.github/workflows/build-container.yml` builds images with Buildah for `linux/amd64` and `linux/arm64` by default. Callers can select architectures through the `architectures` JSON-array input.
+
+Cross-architecture builds use `docker/setup-qemu-action` to register static QEMU emulators through a container, without depending on the runner distribution's `qemu-user-static` package. When publishing is enabled, the architecture-specific images are combined into a multiarch manifest.
+
 ## Disclaimer
 
 Erhardt Consulting GmbH is not affiliated with the projects contained within these images. All images are provided "as-is" without any warranty. We aim to offer helpful resources, but we cannot guarantee the functionality or security of the applications themselves.

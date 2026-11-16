@@ -21,7 +21,7 @@ jobs:
       nextcloud: ${{ steps.nextcloud_version.outputs.NEXTCLOUD_VERSION }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Extract NEXTCLOUD_VERSION from Dockerfile
         id: nextcloud_version
@@ -55,16 +55,14 @@ jobs:
 
     steps:
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
-        with:
-          install: true
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
       - name: Pull image
         run: |
           docker pull ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }}
 
       - name: Log in to Docker Hub (as rootlogin)
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: docker.io
           username: rootlogin
@@ -78,7 +76,7 @@ jobs:
             ghcr.io/erhardtconsulting/${{ env.IMAGE_NAME }}:${{ env.NEXTCLOUD_VERSION }}
 
       - name: Log in to Quay.io (as rootlogin)
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: quay.io
           username: rootlogin+github

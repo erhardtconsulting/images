@@ -47,13 +47,14 @@ jobs:
       matrix:
         platform: ${{ fromJSON(inputs.architectures) }}
     steps:
-      - name: Install qemu dependency
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y qemu-user-static
+      - name: Set up QEMU
+        if: ${{ matrix.platform != 'amd64' }}
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4
+        with:
+          platforms: ${{ matrix.platform }}
 
       - name: Checkout repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Setup environment variables
         run: |
@@ -101,7 +102,7 @@ jobs:
           free -h
 
       - name: Build image with buildah
-        uses: redhat-actions/buildah-build@9dc2ade9b5db229966b5025ae266311e12f349c4 # v2
+        uses: redhat-actions/buildah-build@719e3c40d8af9790c23eca13f7daa339f2867034 # v3
         with:
           image: erhardtconsulting/${{ env.IMAGE }}
           tags: ${{ env.TAG }}-${{ env.PLATFORM }}
@@ -116,7 +117,7 @@ jobs:
 
       # Upload container
       - name: Upload container
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: ${{ env.IMAGE }}-${{ env.TAG }}-${{ env.PLATFORM }}
           path: /tmp/${{ env.IMAGE }}-${{ env.TAG }}-${{ env.PLATFORM }}.tar
@@ -178,7 +179,6 @@ jobs:
           for registry in "ghcr.io" "quay.io" "docker.io"; do
             buildah tag erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} ${registry}/erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}
           done
-          echo "PUSH_TAGS=${{ env.TAG }}" >> $GITHUB_ENV
 
       - name: Tag image as latest
         if: ${{ inputs.latest }}
@@ -186,48 +186,47 @@ jobs:
           for registry in "ghcr.io" "quay.io" "docker.io"; do
             buildah tag erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }} ${registry}/erhardtconsulting/${{ env.IMAGE }}:latest
           done
-          echo "PUSH_TAGS=${{ env.TAG }} latest" >> $GITHUB_ENV
 
       - name: Log in to ghcr.io
-        uses: redhat-actions/podman-login@4934294ad0449894bcd1e9f191899d7292469603 # v1
+        uses: redhat-actions/podman-login@50c2d9a331bb67c8fdab99b86455fad05e2e3252 # v2
         with:
           registry: ghcr.io/erhardtconsulting
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
       - name: Log in to Quay.io
-        uses: redhat-actions/podman-login@4934294ad0449894bcd1e9f191899d7292469603 # v1
+        uses: redhat-actions/podman-login@50c2d9a331bb67c8fdab99b86455fad05e2e3252 # v2
         with:
           registry: quay.io/erhardtconsulting
           username: ${{ secrets.QUAYIO_USERNAME }}
           password: ${{ secrets.QUAYIO_TOKEN }}
 
       - name: Log in to Docker Hub
-        uses: redhat-actions/podman-login@4934294ad0449894bcd1e9f191899d7292469603 # v1
+        uses: redhat-actions/podman-login@50c2d9a331bb67c8fdab99b86455fad05e2e3252 # v2
         with:
           registry: docker.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push image to ghcr
-        uses: redhat-actions/push-to-registry@5860fc963bf8f2b3221773a023141612f010c469 # v2
+        uses: redhat-actions/push-to-registry@94ade333c38ecc0e60e94785125d9a52ca423b37 # v3
         with:
-          registry: ghcr.io/erhardtconsulting
-          image: ${{ env.IMAGE }}
-          tags: ${{ env.PUSH_TAGS }}
+          tags: |
+            ghcr.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}
+            ${{ inputs.latest && format('ghcr.io/erhardtconsulting/{0}:latest', env.IMAGE) || '' }}
 
       - name: Push image to quay.io
         if: ${{ inputs.push-quay }}
-        uses: redhat-actions/push-to-registry@5860fc963bf8f2b3221773a023141612f010c469 # v2
+        uses: redhat-actions/push-to-registry@94ade333c38ecc0e60e94785125d9a52ca423b37 # v3
         with:
-          registry: quay.io/erhardtconsulting
-          image: ${{ env.IMAGE }}
-          tags: ${{ env.PUSH_TAGS }}
+          tags: |
+            quay.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}
+            ${{ inputs.latest && format('quay.io/erhardtconsulting/{0}:latest', env.IMAGE) || '' }}
 
       - name: Push image to docker.io
         if: ${{ inputs.push-docker }}
-        uses: redhat-actions/push-to-registry@5860fc963bf8f2b3221773a023141612f010c469 # v2
+        uses: redhat-actions/push-to-registry@94ade333c38ecc0e60e94785125d9a52ca423b37 # v3
         with:
-          registry: docker.io
-          image: erhardtconsulting/${{ env.IMAGE }}
-          tags: ${{ env.PUSH_TAGS }}
+          tags: |
+            docker.io/erhardtconsulting/${{ env.IMAGE }}:${{ env.TAG }}
+            ${{ inputs.latest && format('docker.io/erhardtconsulting/{0}:latest', env.IMAGE) || '' }}
