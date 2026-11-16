@@ -8,6 +8,33 @@ Security is paramount in containerized environments. Running containers with roo
 
 ## Available Images
 
+### [Argo CD](./argocd)
+
+The Argo CD image includes ksops, SOPS, vals, kubectl, and helm-secrets.
+For Helm 4, it installs the separate `secrets`, `secrets-getter`, and
+`secrets-post-renderer` plugins at the version pinned in `argocd/Dockerfile`.
+The build verifies their signatures using the manufacturer's signing key
+(`1F34F95B4F30BC5B06E0D7CC3F619F17002790D8`) fetched from
+<https://github.com/jkroepke.gpg>. See the
+[helm-secrets installation guide](https://github.com/jkroepke/helm-secrets/wiki/Installation#using-helm-plugin-manager).
+
+The Helm wrapper remains enabled so `helm template` decrypts encrypted values
+files using SOPS, including absolute paths passed by Argo CD. The `secrets://`
+getter is also available. Decryption keys or KMS credentials must still be
+provided by the deployment.
+
+Build and check the image locally:
+
+```sh
+podman build --build-arg TARGETARCH="$(podman info --format '{{.Host.Arch}}')" \
+  -f argocd/Dockerfile -t localhost/argocd:helm-secrets-test argocd
+podman run --rm localhost/argocd:helm-secrets-test helm secrets --help
+podman run --rm localhost/argocd:helm-secrets-test helm plugin list
+```
+
+The build checks CLI availability and all three Helm 4 plugin types as the
+unprivileged Argo CD user.
+
 ### [FreshRSS](./freshrss)
 
 [FreshRSS](https://freshrss.org/) is a self-hosted RSS feed aggregator that allows you to collect and read news and articles from various sources in one place. It's lightweight, customizable, and supports multiple users.

@@ -52,13 +52,34 @@ RUN set -eux; \
     cp /tmp/vals ${TOOLS_FOLDER}/bin/vals; \
     rm -rf /tmp/*; \
     # install helm-secrets
-    curl -fL "https://github.com/jkroepke/helm-secrets/releases/download/v${HELM_SECRETS_VERSION}/helm-secrets.tar.gz" | tar -xvz -C ${HELM_PLUGINS}; \
+    plugin_install_dir=$(mktemp -d); \
+    mkdir -m 0700 "${plugin_install_dir}/gnupg"; \
+    curl -fLo "${plugin_install_dir}/key.asc" https://github.com/jkroepke.gpg; \
+    gpg --homedir "${plugin_install_dir}/gnupg" --batch --import "${plugin_install_dir}/key.asc"; \
+    gpg --homedir "${plugin_install_dir}/gnupg" --batch \
+      --export 1F34F95B4F30BC5B06E0D7CC3F619F17002790D8 > "${plugin_install_dir}/keyring.gpg"; \
+    for plugin in secrets secrets-getter secrets-post-renderer; do \
+      # Helm 4's HTTP installer uses HELM_DATA_HOME instead of HELM_PLUGINS.
+      HELM_DATA_HOME="${plugin_install_dir}/data" HELM_CACHE_HOME="${plugin_install_dir}/cache" \
+        "${HELM_SECRETS_HELM_PATH}" plugin install --verify \
+          --keyring "${plugin_install_dir}/keyring.gpg" \
+          "https://github.com/jkroepke/helm-secrets/releases/download/v${HELM_SECRETS_VERSION}/${plugin}-${HELM_SECRETS_VERSION}.tgz"; \
+      mv "${plugin_install_dir}/data/plugins/${plugin}" "${HELM_PLUGINS}/${plugin}"; \
+    done; \
+    rm -rf "${plugin_install_dir}"; \
     # enable wrapper
-    ln -sf ${HELM_PLUGINS}/helm-secrets/scripts/wrapper/helm.sh ${TOOLS_FOLDER}/bin/helm
+    ln -sf ${HELM_PLUGINS}/secrets/scripts/wrapper/helm.sh ${TOOLS_FOLDER}/bin/helm
 
 USER ${ARGOCD_USER_ID}
 
 ENV PATH="${TOOLS_FOLDER}/bin:${PATH}"
+
+RUN set -eux; \
+    helm secrets --version; \
+    plugins=$(helm plugin list); \
+    printf '%s\n' "${plugins}" | grep -E '^secrets[[:space:]]+[^[:space:]]+[[:space:]]+cli/v1[[:space:]]+v1[[:space:]]'; \
+    printf '%s\n' "${plugins}" | grep -E '^secrets-getter[[:space:]]+[^[:space:]]+[[:space:]]+getter/v1[[:space:]]+v1[[:space:]]'; \
+    printf '%s\n' "${plugins}" | grep -E '^secrets-post-renderer[[:space:]]+[^[:space:]]+[[:space:]]+postrenderer/v1[[:space:]]+v1[[:space:]]'
 
 LABEL org.opencontainers.image.source="https://github.com/erhardtconsulting/images"
 LABEL org.opencontainers.image.description="ArgoCD with ksops and helm-secrets integrated"
