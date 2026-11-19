@@ -36,6 +36,7 @@ RUN apt-get update && \
       libreoffice-nogui \
       make \
       netcat-openbsd \
+      openscad \
       pandoc \
       patch \
       pdfgrep \
@@ -45,6 +46,7 @@ RUN apt-get update && \
       python3-pdfminer \
       python3-pypdf \
       python3-reportlab \
+      python3-trimesh \
       python3-venv \
       qpdf \
       rsync \
@@ -53,6 +55,8 @@ RUN apt-get update && \
       unzip \
       vim \
       wget \
+      xauth \
+      xvfb \
       xz-utils \
       zip \
       zstd && \

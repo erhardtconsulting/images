@@ -11,7 +11,8 @@ are preserved.
 | --- | --- |
 | Documents and spreadsheets | LibreOffice No-GUI, Pandoc, openpyxl, python-docx |
 | PDFs | pdfminer.six, pypdf, ReportLab, pdfgrep, Poppler (`pdfinfo`, `pdftotext`, `pdftoppm`), qpdf |
-| Images | ImageMagick 7 (`magick`) |
+| Images and 3D previews | ImageMagick 7 (`magick`), OpenSCAD CLI |
+| 3D meshes | OpenSCAD, Python `trimesh` |
 | Search and data | SQLite CLI (`sqlite3`), globally installed `@tobilu/qmd` (`qmd`) |
 | Development | Deno, Git, GitHub CLI, Maven, Temurin JDK 25, Node LTS, uv |
 | Media | yt-dlp, FFmpeg |
@@ -27,11 +28,12 @@ The image also includes common server utilities: make, rsync, jq, less, ip,
 ping, dig, netcat, file, patch, 7-Zip, zip/unzip, bzip2, xz and zstd. The
 upstream SSH client, curl, procps, tar and gzip are reused.
 
-The document libraries use Debian's `python3-reportlab`, `python3-docx`,
-`python3-pypdf`, `python3-pdfminer` and `python3-openpyxl` packages with the
-existing `/usr/bin/python3`, without a virtual environment or a Python `PATH`
-override. `python3-venv` is also installed so applications can create their
-own virtual environments in writable storage when needed.
+The document and mesh libraries use Debian's `python3-reportlab`,
+`python3-docx`, `python3-pypdf`, `python3-pdfminer`, `python3-openpyxl` and
+`python3-trimesh` packages with the existing `/usr/bin/python3`, without a
+virtual environment or a Python `PATH` override. `python3-venv` is also
+installed so applications can create their own virtual environments in
+writable storage when needed.
 
 PDF text extraction uses Debian's pdfminer.six; pdfplumber is not included.
 
@@ -42,8 +44,9 @@ Renovate tracks its GitHub release tag; Debian maintains the packaged document
 libraries.
 
 Debian 13 has no `pandoc-full` package, so the Dockerfile installs `pandoc`.
-LibreOffice uses the `libreoffice-nogui` packages, not a desktop installation. Some
-X client libraries are dependencies, but no X server or display is needed.
+LibreOffice uses the `libreoffice-nogui` packages, not a desktop installation.
+No persistent X server or desktop is needed; `xvfb-run` starts a temporary
+virtual display only when rendering 3D previews.
 Temurin and Maven are copied from official, digest-pinned images without
 installing an additional Debian JRE.
 
@@ -89,6 +92,42 @@ pdftotext /tmp/report.pdf /tmp/report.txt
 qpdf --check /tmp/report.pdf
 magick /tmp/input.png -resize 50% /tmp/smaller.png
 magick /tmp/input.png -resize 200% /tmp/larger.jpg
+```
+
+## 3D model and mesh operations
+
+Create a parametric model with OpenSCAD and export an STL without a desktop
+session:
+
+```sh
+cat > /tmp/box.scad <<'SCAD'
+cube([20, 20, 10], center=true);
+SCAD
+openscad -o /tmp/box.stl /tmp/box.scad
+```
+
+Python's `trimesh` can create meshes, inspect them, and convert between STL
+and common formats such as OBJ and PLY:
+
+```python
+import trimesh
+
+box = trimesh.creation.box(extents=[20, 20, 10])
+box.export("/tmp/box.stl")
+box.export("/tmp/box.obj")
+box.export("/tmp/box.ply")
+```
+
+Render an STL as a PNG preview with OpenSCAD under a temporary X virtual
+framebuffer, then use the existing ImageMagick installation to create a JPEG
+if needed:
+
+```sh
+printf 'import("/tmp/box.stl");\n' > /tmp/preview.scad
+xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
+  env LIBGL_ALWAYS_SOFTWARE=1 openscad --viewall --autocenter --imgsize=640,480 \
+  -o /tmp/box.png /tmp/preview.scad
+magick /tmp/box.png /tmp/box.jpg
 ```
 
 Use different output directories when inputs share the same basename.
@@ -156,8 +195,9 @@ bash openclaw/test-image.sh erhardtconsulting/openclaw
 The test runs without root privileges, with a read-only root filesystem.
 Offline functional checks actually edit DOCX/XLSX/PDF files, render Office
 files as PDFs, verify PDF contents and structure, resize images to exact
-dimensions, query SQLite and index/search a qmd collection. They also check
-Temurin/Maven and that the upstream Node remains the default.
+dimensions, create and convert 3D meshes, render STL previews, query SQLite
+and index/search a qmd collection. They also check Temurin/Maven and that the
+upstream Node remains the default.
 A separate bounded check starts the gateway and checks `/healthz`.
 
 The main and PR workflows build and test `linux/amd64` and `linux/arm64`

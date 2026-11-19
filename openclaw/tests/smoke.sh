@@ -5,7 +5,7 @@ export LC_ALL=C.UTF-8
 test "$(id -u)" = 1000
 test "$HOME" = /home/node
 awk '$2 == "/" { found = 1; if ($4 !~ /(^|,)ro(,|$)/) exit 1 } END { if (!found) exit 1 }' /proc/mounts
-for tool in deno pandoc git gh libreoffice soffice mvn node npm pdfgrep pdfinfo \
+for tool in deno openscad xvfb-run pandoc git gh libreoffice soffice mvn node npm pdfgrep pdfinfo \
     pdftotext pdftoppm qpdf java javac sqlite3 tree uv vim wget yt-dlp \
     make ssh ssh-keygen sftp scp rsync jq less ps top free ip ping dig nc \
     unzip zip 7z bzip2 zstd file patch xz curl tar gzip ffmpeg ffprobe; do
@@ -119,6 +119,51 @@ fi
 "${convert_image[@]}" original.png -resize '160x80!' larger.jpg
 test "$("${identify_image[@]}" -format '%m %w %h' smaller.png)" = 'PNG 40 20'
 test "$("${identify_image[@]}" -format '%m %w %h' larger.jpg)" = 'JPEG 160 80'
+
+cat > openscad-cube.scad <<'SCAD'
+cube([10, 20, 30], center=true);
+SCAD
+QT_QPA_PLATFORM=offscreen openscad -o openscad-cube.stl openscad-cube.scad
+test -s openscad-cube.stl
+python3 - <<'PY'
+import trimesh
+
+trimesh.creation.box(extents=[10, 20, 30]).export("python-cube.stl")
+PY
+
+cat > stl-preview.scad <<'SCAD'
+import("python-cube.stl");
+SCAD
+xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
+    env LIBGL_ALWAYS_SOFTWARE=1 openscad --viewall --autocenter --imgsize=128,128 \
+    -o python-cube.png stl-preview.scad
+test -s python-cube.png
+"${convert_image[@]}" python-cube.png -quality 85 python-cube.jpg
+test "$("${identify_image[@]}" -format '%m' python-cube.jpg)" = JPEG
+
+python3 - <<'PY'
+from pathlib import Path
+
+import numpy as np
+import trimesh
+
+assert Path(trimesh.__file__).is_relative_to("/usr/lib/python3/dist-packages")
+
+expected_extents = [10, 20, 30]
+openscad_mesh = trimesh.load("openscad-cube.stl", force="mesh")
+assert openscad_mesh.is_watertight
+assert np.allclose(openscad_mesh.extents, expected_extents, atol=1e-3)
+
+python_mesh = trimesh.creation.box(extents=expected_extents)
+for suffix in ("stl", "obj", "ply"):
+    path = Path(f"python-cube.{suffix}")
+    if suffix != "stl":
+        python_mesh.export(path)
+    assert path.is_file() and path.stat().st_size > 0
+    converted_mesh = trimesh.load(path, force="mesh")
+    assert converted_mesh.is_watertight
+    assert np.allclose(converted_mesh.extents, expected_extents, atol=1e-3)
+PY
 
 mkdir notes
 printf '# Moonstone\n\nMoonstone document processing test.\n' > notes/moonstone.md
