@@ -53,9 +53,9 @@ unprivileged Argo CD user.
 
 ## Container Builds
 
-The reusable workflow in `.github/workflows/build-container.yml` builds images with Buildah for `linux/amd64` and `linux/arm64` by default. Callers can select architectures through the `architectures` JSON-array input.
+The reusable workflow in `.github/workflows/build-container.yml` builds images with Buildah for `linux/amd64` and `linux/arm64` by default. Callers can select either or both architectures through the `architectures` JSON-array input.
 
-Cross-architecture builds use `docker/setup-qemu-action` to register static QEMU emulators through a container, without depending on the runner distribution's `qemu-user-static` package. When publishing is enabled, the architecture-specific images are combined into a multiarch manifest.
+Builds and any configured smoke tests run natively: AMD64 on `ubuntu-26.04` and ARM64 on `ubuntu-26.04-arm`. When publishing is enabled, the architecture-specific images are combined into a multiarch manifest.
 
 ## Disclaimer
 

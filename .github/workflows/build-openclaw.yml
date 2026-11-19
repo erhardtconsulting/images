@@ -37,7 +37,6 @@ jobs:
     with:
       image: "openclaw"
       tag: ${{ needs.get-version.outputs.openclaw }}
-      native-arm64: true
       test-script: "openclaw/test-image.sh"
       push: true
       push-docker: false
