@@ -201,7 +201,9 @@ upstream Node remains the default.
 A separate bounded check starts the gateway and checks `/healthz`.
 
 The main and PR workflows build and test `linux/amd64` and `linux/arm64`
-through the repository's reusable Buildah workflow. Only main/manual builds
-publish to GHCR, with the upstream version and `latest` tags. Renovate tracks
+through the repository's reusable Buildah workflow. Both run natively:
+AMD64 on `ubuntu-26.04` and ARM64 on `ubuntu-26.04-arm` without QEMU.
+Only main/manual builds publish to GHCR, with the upstream version and
+`latest` tags. Renovate tracks
 the parent, tool images, qmd and yt-dlp releases. Temurin remains
 on JDK 25 and Maven's source image retains the Temurin 25 variant.

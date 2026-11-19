@@ -34,6 +34,10 @@ on:
         description: "List of architectures as JSON-array"
         type: string
         default: '["amd64","arm64"]'
+      native-arm64:
+        description: "Build and test arm64 on a native runner instead of using QEMU"
+        type: boolean
+        default: false
       test-script:
         description: "Optional repository script to test the built image before publishing"
         type: string
@@ -46,13 +50,13 @@ permissions:
 jobs:
   build:
     name: Build image
-    runs-on: ubuntu-26.04
+    runs-on: ${{ matrix.platform == 'arm64' && inputs.native-arm64 && 'ubuntu-26.04-arm' || 'ubuntu-26.04' }}
     strategy:
       matrix:
         platform: ${{ fromJSON(inputs.architectures) }}
     steps:
       - name: Set up QEMU
-        if: ${{ matrix.platform != 'amd64' }}
+        if: ${{ matrix.platform != 'amd64' && !(matrix.platform == 'arm64' && inputs.native-arm64) }}
         uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4
         with:
           platforms: ${{ matrix.platform }}
