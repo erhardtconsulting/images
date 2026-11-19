@@ -1,0 +1,43 @@
+name: "OpenClaw: Build Container Image / Pull Request"
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'openclaw/**'
+      - '.github/workflows/build-openclaw.yml'
+      - '.github/workflows/build-openclaw-pr.yml'
+      - '.github/workflows/build-container.yml'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  get-version:
+    runs-on: ubuntu-26.04
+    outputs:
+      openclaw: ${{ steps.version.outputs.OPENCLAW_VERSION }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Extract OpenClaw version from Dockerfile
+        id: version
+        run: |
+          VERSION=$(sed -nE 's|^FROM ghcr.io/openclaw/openclaw:([^@ ]+)@sha256:[a-f0-9]+.*$|\1|p' openclaw/Dockerfile)
+          test -n "$VERSION"
+          echo "OPENCLAW_VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+
+  call-build-workflow:
+    name: Build & Test
+    needs: get-version
+    uses: ./.github/workflows/build-container.yml
+    with:
+      image: "openclaw"
+      tag: ${{ needs.get-version.outputs.openclaw }}
+      test-script: "openclaw/test-image.sh"
+      push: false
+      push-docker: false
+      push-quay: false

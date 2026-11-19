@@ -7,6 +7,25 @@
     /*
       Version restrictions
     */
+    {
+      matchFileNames: ['openclaw/Dockerfile'],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['ghcr.io/denoland/deno'],
+      versioning: 'regex:^bin-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$',
+    },
+    {
+      matchFileNames: ['openclaw/Dockerfile'],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['docker.io/library/eclipse-temurin'],
+      versioning: 'regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)_(?<revision>\\d+)-(?<compatibility>jdk-noble)$',
+      allowedVersions: '/^25\\./',
+    },
+    {
+      matchFileNames: ['openclaw/Dockerfile'],
+      matchDatasources: ['docker'],
+      matchPackageNames: ['docker.io/library/maven'],
+      versioning: 'regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>eclipse-temurin-25)$',
+    },
     // base-php/8.3.Dockerfile - Restrict to php 8.3.x
     {
       matchFileNames: ['base-php/8.3.Dockerfile'],

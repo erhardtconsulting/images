@@ -34,6 +34,10 @@ on:
         description: "List of architectures as JSON-array"
         type: string
         default: '["amd64","arm64"]'
+      test-script:
+        description: "Optional repository script to test the built image before publishing"
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -110,6 +114,12 @@ jobs:
           context: ${{ env.IMAGE }}
           containerfiles: |
             ${{ env.IMAGE }}/${{ env.DOCKERFILE }}
+
+      - name: Test image
+        if: ${{ inputs.test-script != '' }}
+        env:
+          TEST_SCRIPT: ${{ inputs.test-script }}
+        run: bash "$TEST_SCRIPT" "erhardtconsulting/${IMAGE}:${TAG}-${PLATFORM}"
 
       - name: Create tar image
         run: |
@@ -195,6 +205,7 @@ jobs:
           password: ${{ github.token }}
 
       - name: Log in to Quay.io
+        if: ${{ inputs.push-quay }}
         uses: redhat-actions/podman-login@50c2d9a331bb67c8fdab99b86455fad05e2e3252 # v2
         with:
           registry: quay.io/erhardtconsulting
@@ -202,6 +213,7 @@ jobs:
           password: ${{ secrets.QUAYIO_TOKEN }}
 
       - name: Log in to Docker Hub
+        if: ${{ inputs.push-docker }}
         uses: redhat-actions/podman-login@50c2d9a331bb67c8fdab99b86455fad05e2e3252 # v2
         with:
           registry: docker.io

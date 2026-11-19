@@ -8,6 +8,14 @@ Security is paramount in containerized environments. Running containers with roo
 
 ## Available Images
 
+### [OpenClaw](./openclaw)
+
+The official OpenClaw image extended with headless DOCX, XLSX, PDF and image
+processing tools, development tools, SQLite and qmd. It preserves the upstream
+user and startup, reuses existing tools (including Node LTS), and supports a
+read-only root filesystem with writable runtime mounts. See the
+[tool inventory and usage examples](./openclaw/README.md).
+
 ### [Argo CD](./argocd)
 
 The Argo CD image includes ksops, SOPS, vals, kubectl, and helm-secrets.
