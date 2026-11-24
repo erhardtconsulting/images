@@ -31,7 +31,7 @@ jobs:
   call-build-workflow:
     name: Build
     needs: get-version
-    uses: erhardtconsulting/images/.github/workflows/build-container.yml@main
+    uses: erhardtconsulting/images/.github/workflows/build-container.yml@449a6d60ee42ce9bef9d6b0f8b7b7a863f13628c # main
     with:
       image: "init-postgres"
       dockerfile: "pg18.Dockerfile"
