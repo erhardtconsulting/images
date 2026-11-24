@@ -5,7 +5,7 @@ FROM docker.io/library/maven:3.10.0-eclipse-temurin-25@sha256:9d329e21adce7c0cc5
 FROM ghcr.io/openclaw/openclaw:2026.11.6@sha256:65e229536a2698f0ab211c8a3d1c5c8e2685d19379d153e95f93ff76f22779cf AS base
 
 # renovate: datasource=github-releases depName=yt-dlp/yt-dlp versioning=pep440
-ARG YTDLP_VERSION="2026.10.26"
+ARG YTDLP_VERSION="2026.11.23"
 
 USER root
 
